@@ -69,7 +69,7 @@ $(document).ready(function() {
 
     var queryURL = "http://maps.co.mecklenburg.nc.us/api/search/v1/" + formattedAddress + "?tables=address&limit=1"
     queryURL = encodeURI(queryURL);
-    console.log("maps.co.mecklenburg URL: " + queryURL);
+    // console.log("maps.co.mecklenburg URL: " + queryURL);
 
     $.ajax({
         url: queryURL,
