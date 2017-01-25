@@ -2,24 +2,172 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <title>Rock, Paper, Scissors Multiplayer</title>
-  <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
-  <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <!-- Latest compiled and minified JQuery -->
-  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-  <!-- Latest compiled and minified JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  <!-- Local stylesheet, JS, etc. -->
-  <script type="text/javascript" src="assets/js/app.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+    <title>ReaEstate Project - Materialize</title>
+    <!-- CSS  -->
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
 </head>
 
 <body>
-  <div class="container">
-  </div>
+    <nav class="light-blue lighten-1" role="navigation">
+        <div class="nav-wrapper container">
+            <a id="logo-container" href="#" class="brand-logo"></a>
+            <img src="assets/images/house.jpg" class="img-circle" alt="logo" width="70px" height="65px">
+        </div>
+    </nav>
+    <div class="section no-pad-bot " id="index-banner ">
+        <div class="container ">
+            <br>
+            <br>
+            <h1 class="header center orange-text ">Should We Stay or Should We Go??</h1>
+            <h5 class="header center orange-text"> Mecklenburg Edition</h5>
+            <!--Beginning of the Charlotte Card-->
+            <div class="row ">
+                <div class="row ">
+                    <div class="col s12 m9 ">
+                        <div class="card ">
+                            <p class="z-depth-5 "></p>
+                            <div class="card-image ">
+                                <img src="assets/images/charlotte.jpg ">
+                                <span class="card-title orange-text">Charlotte</span>
+                            </div>
+                            <div class="card-content ">
+                                <div class="row center ">
+                                    <h3 class="header col s12 light-blue-text "> A Modern Spin on Moving </h3>
+                                </div>
+                                <p class="details"> Going back and forth trying to decide on whether you want to move-only to realize that the details to help you aren't available in one place?? We have been there too! Simply type in the address and take a look at Decision Data!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+            <!--Start of Div containing address input-->
+            <div class="row">
+                <div class="col s2">
+                </div>
+                <form class="col s6">
+                    <div class="row">
+                        <h4 class="header col s12 waves-light-text "> Where are you looking? </h4>
+                        <div class="input-field col s12">
+                            <input id="street-name" type="text" class="validate">
+                            <label for="street-name">Street Name</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <label class="active">City</label>
+                            <select class="browser-default">
+                                <option value="" disabled selected></option>
+                                <option value="1">Charlotte</option>
+                                <option value="2">Cornelius</option>
+                                <option value="3">Davidson</option>
+                                <option value="4">Huntersville</option>
+                                <option value="5">Matthews</option>
+                                <option value="6">Mint Hill</option>
+                                <option value="7">Pineville</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="zip-code" type="text" class="validate">
+                            <label for="zip-code">Zipcode</label>
+                        </div>
+                    </div>
+                    <div class="row center ">
+                        <a href="http://materializecss.com/getting-started.html " id="submit-button " class="btn-large waves-effect waves-light orange ">Submit</a>
+                    </div>
+                </form>
+            </div>
+            <!--Container section for icon section at bottom of input page-->
+            <div class="container">
+                <div class="section">
+                    <!--   Icon Section   -->
+                    <div class="row">
+                        <div class="col s12 m4">
+                            <div class="icon-block">
+                                <h2 class="center light-blue-text"><i class="material-icons">tag_faces</i></h2>
+                                <h5 class="center">Testimonials</h5>
+                                <p class="light">I was driving my real estate agent crazy. I couldn't decide whether the area was really a good deal or not. Having the ability to compare market values helped tremendously-including the school ratings sealed the deal!
+                                    <br> Vicki 1/1/17</p>
+                            </div>
+                        </div>
+                        <div class="col s12 m4">
+                            <div class="icon-block">
+                                <h2 class="center light-blue-text"><i class="material-icons">group</i></h2>
+                                <h5 class="center">Partners??</h5>
+                                <p class="light">By utilizing elements and principles of Material Design, we were able to create a framework that incorporates components and animations that provide more feedback to users. Additionally, a single underlying responsive system across all platforms allow for a more unified user experience.</p>
+                            </div>
+                        </div>
+                        <div class="col s12 m4">
+                            <div class="icon-block">
+                                <h2 class="center light-blue-text"><i class="material-icons">live_help</i></h2>
+                                <h5 class="center">Feedback??</h5>
+                                <p class="light">We have provided detailed documentation as well as specific code examples to help new users get started. We are also always open to feedback and can answer any questions a user may have about Materialize.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--div for table of results-->
+            <div class='results'>
+            </div>
+            <!--Map div for results-->
+            <div class="Googlemap">
+            </div>
+            <!--decision table div-->
+            <div class="decisionData">
+                <!-- table to display the information gathered-->
+                <h3>Stay or Go Decision Data</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-field="id">location</th>
+                            <th data-field="priceFt">Price per Square Foot</th>
+                            <th data-field="price">School Rating</th>
+                            <th data-field="priceFt">placeholder</th>
+                            <th data-field="priceFt">placeholder</th>
+                            <th data-field="priceFt">placeholder</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Charlotte</td>
+                            <td>173.00</td>
+                            <td>9</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <footer class="page-footer orange ">
+        <div class="footer-copyright ">
+            <div class="container2 ">
+                <a class="orange-text text-lighten-3 " href="http://materializecss.com ">Copyright 2017 Team5</a>
+            </div>
+        </div>
+    </footer>
+    <!--  Scripts-->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js "></script>
+    <script src="js/materialize.js "></script>
+    <script src="js/init.js "></script>
 </body>
 
 </html>

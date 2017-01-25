@@ -1,0 +1,42 @@
+/* Custom Stylesheet */
+/**
+ * Use this file to override Materialize files so you can update
+ * the core Materialize files in the future
+ *
+ * Made By MaterializeCSS.com
+ */
+
+.icon-block {
+  padding: 0 15px;
+}
+.icon-block .material-icons {
+	font-size: inherit;
+}
+
+.card {
+	margin-left:150px;
+}
+.section   {
+	background-color: white;
+}
+.container2{
+	text-align: center;
+}
+h1{
+	font-size:350%;
+	 color: white;
+    text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+}
+h3 {
+	 color: white;
+    text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+}
+
+img {
+	border: 1px solid #8a4419;
+    border-style: inset;
+}
+.details {
+	font-size: medium;
+	color:blue;
+}
