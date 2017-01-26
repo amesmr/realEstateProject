@@ -206,3 +206,36 @@ $(document).ready(function() {
 
   // reSize();
 });
+
+
+
+
+// ********************************** Gil's Code ********************************
+
+  function initialize() {
+
+    panorama = new google.maps.StreetViewPanorama(
+        document.getElementById('street-view'),
+        {
+          position: {lat: globalLat, lng: globalLng},
+          pov: {heading: 165, pitch: 0},
+       //   zoom: 1,
+          linksControl: false,
+          panControl: false,
+          enableCloseButton: false
+        });
+  }
+
+
+
+
+// ********************************** Gil's Code END******************************
+
+// ********************************** Houssein's Code ********************************
+
+
+
+
+
+
+// ********************************** Houssein's Code END******************************
