@@ -7,7 +7,7 @@
     <!-- Latest compiled and minified JavaScript -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
-    <title>ReaEstate Project - Materialize</title>
+    <title>Real Estate Project - Materialize</title>
     <!-- CSS  -->
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -70,15 +70,15 @@
                     <div class="row">
                         <div class="input-field col s12">
                             <label class="active">City</label>
-                            <select class="browser-default">
+                            <select class="browser-default" id="city" >
                                 <option value="" disabled selected></option>
-                                <option value="1">Charlotte</option>
-                                <option value="2">Cornelius</option>
-                                <option value="3">Davidson</option>
-                                <option value="4">Huntersville</option>
-                                <option value="5">Matthews</option>
-                                <option value="6">Mint Hill</option>
-                                <option value="7">Pineville</option>
+                                <option value="Charlotte">Charlotte</option>
+                                <option value="Cornelius">Cornelius</option>
+                                <option value="Davidson">Davidson</option>
+                                <option value="Huntersville">Huntersville</option>
+                                <option value="Matthews">Matthews</option>
+                                <option value="Mint Hill">Mint Hill</option>
+                                <option value="Pineville">Pineville</option>
                             </select>
                         </div>
                     </div>
@@ -89,7 +89,7 @@
                         </div>
                     </div>
                     <div class="row center ">
-                        <a href="http://materializecss.com/getting-started.html " id="submit-button " class="btn-large waves-effect waves-light orange ">Submit</a>
+                        <a href="http://materializecss.com/getting-started.html " id="submit-button" class="btn-large waves-effect waves-light orange ">Submit</a>
                     </div>
                 </form>
             </div>
@@ -136,32 +136,28 @@
                 <table>
                     <thead>
                         <tr>
-                            <th data-field="id">location</th>
-                            <th data-field="priceFt">Price per Square Foot</th>
-                            <th data-field="price">School Rating</th>
-                            <th data-field="priceFt">placeholder</th>
-                            <th data-field="priceFt">placeholder</th>
-                            <th data-field="priceFt">placeholder</th>
+                            <th>Address</th>
+                            <th>Location</th>
+                            <th>Neighborhood</th>
+                            <th>Square Feet</th>
+                            <th>Price per Square Foot</th>
+                            <th>School Rating</th> <!-- ???? -->
+                            <th>Tax Value</th>
+                            <th>Total Value</th>                            
+                            <th>Year Built</th>
+                            <th>Stories</th>
+                            <th>Bedrooms</th>
+                            <th>Full Baths</th>
+                            <th>3/4 Baths</th>
+                            <th>1/2 Baths</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>Charlotte</td>
-                            <td>173.00</td>
-                            <td>9</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                    <tbody id="properties-list">
                     </tbody>
                 </table>
+            </div>
+            <div id=street-view>
+              <!-- insert street view via html -->
             </div>
         </div>
     </div>
