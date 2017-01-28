@@ -1,7 +1,8 @@
-currentProperty = {
+var currentProperty = {
     lat: 0,
     lng: 0,
     googlePlaceID: "",
+    googlePlaceLocation: {},
     ID: "",
     PID: "",
     enteredAddress: "",
@@ -21,7 +22,10 @@ currentProperty = {
     school_ratings: "", // via ???
 }
 
-propertyArry = [{}];
+var propertyArry = [{}];
+var panorama;
+var vlat = 35.225218;
+var vlng = -80.847322;
 
 function initPage() {
     // set up for user
@@ -42,7 +46,7 @@ $(document).ready(function() {
         formattedAddress += $("#zip-code").val().trim() + ",";
         currentProperty.enteredAddress = $("#street-name").val().trim();
         // TODO Validate these inputs
-        currentProperty.city=$("#city").val().trim();
+        currentProperty.city = $("#city").val().trim();
         var queryURL = "https://maps.googleapis.com/maps/api/geocode/json?";
         queryURL += formattedAddress;
         queryURL += "&key=AIzaSyBTTpB5r1BNUKiCXbfbbcSfX6M8s867_UY";
@@ -63,6 +67,7 @@ $(document).ready(function() {
                 currentProperty.lat = results[0].geometry.location.lat;
                 currentProperty.lng = results[0].geometry.location.lng;
                 currentProperty.googlePlaceID = results[0].place_id;
+                currentProperty.googlePlaceLocation = results[0].geometry.location;
                 currentProperty.zip = results[0].address_components[8].long_name;
                 console.log("currentProperty: ");
                 console.log(currentProperty);
@@ -77,9 +82,9 @@ $(document).ready(function() {
 
     });
 
-  $("body").on("click touch", ".prop-info", function() {
-    initialize($(this).attr("id"));
-  });
+    $("body").on("click touch", ".prop-info", function() {
+        initialize($(this).attr("id"));
+    });
 
     $(window).resize(function() {
         // reSize();
@@ -227,6 +232,16 @@ function getAppraisalInfo() {
             // using its google maps place ID as the array key
             propertyArry[currentProperty.googlePlaceID] = currentProperty;
             propertyInfoTable(currentProperty.googlePlaceID);
+
+            // clear out the inputs for the user
+
+        $("#street-name").val("");
+        $("#city").val("");
+        $("#zip-code").val("");
+        $("#street-name").val("");
+        // TODO Validate these inputs
+        $("#city").val("");
+
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
             console.log('jqXHR: ' + jqXHR);
@@ -288,7 +303,10 @@ function propertyInfoTable(googleID) {
     td_full_baths.appendTo(tr);
     td_three_quarter_baths.appendTo(tr);
     td_half_baths.appendTo(tr);
-    initialize(googleID);
+    vlat = parseFloat(propertyArry[googleID].lat);
+    vlng = parseFloat(createStreetMap.lng);
+    // panorama.setCenter()
+    createStreetMap(propertyArry[googleID].googlePlaceLocation);
 }
 
 
@@ -296,20 +314,42 @@ function propertyInfoTable(googleID) {
 
 // ********************************** Gil's Code ********************************
 
-function initialize(googleID) {
-    if (googleID == undefined) {return false;}
-    panorama = new google.maps.StreetViewPanorama(
-        document.getElementById('street-view'), {
-            position: { lat: propertyArry[googleID].lat, lng: propertyArry[googleID].lng },
-            pov: { heading: 165, pitch: 0 },
-            //   zoom: 1,
-            linksControl: false,
-            panControl: false,
-            enableCloseButton: false
-        });
+// function initialize() {
+//     panorama = new google.maps.StreetViewPanorama(
+//         document.getElementById('street-view'), {
+//             position: { lat: vlat, lng: vlng },
+//             pov: { heading: 165, pitch: 0 },
+//             //   zoom: 1,
+//             linksControl: false,
+//             panControl: false,
+//             enableCloseButton: false
+//         });
+// }
+function createStreetMap(location){
+    var panorama;
+
+    //once the document is loaded, see if google has a streetview image within 50 meters of the given location, and load that panorama
+    var sv = new google.maps.StreetViewService();
+
+    sv.getPanoramaByLocation(location, 50, function(data, status) {
+        if (status == 'OK') {
+            //google has a streetview image for this location, so attach it to the streetview div
+            var panoramaOptions = {
+                pano: data.location.pano,
+                addressControl: false,
+                navigationControl: true,
+                navigationControlOptions: {
+                    style: google.maps.NavigationControlStyle.SMALL
+                }
+            }; 
+            var panorama = new google.maps.StreetViewPanorama(document.getElementById("street-view"), panoramaOptions);
+        }
+        else{
+            //no google streetview image for this location, so hide the streetview div
+            $('#' + "street-view").parent().hide();
+        }
+    });
 }
-
-
 
 
 // ********************************** Gil's Code END******************************
