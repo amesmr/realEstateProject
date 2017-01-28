@@ -44,6 +44,7 @@ $(document).ready(function() {
         var formattedAddress = "address=" + $("#street-name").val().trim() + ",";
         formattedAddress += $("#city").val().trim() + ",";;
         formattedAddress += $("#zip-code").val().trim() + ",";
+        currentProperty = new Object();
         currentProperty.enteredAddress = $("#street-name").val().trim();
         // TODO Validate these inputs
         currentProperty.city = $("#city").val().trim();
@@ -59,8 +60,8 @@ $(document).ready(function() {
                 method: "GET"
             })
             .done(function(response) {
-                console.log("btnHomeInfo.click:");
-                console.log(response);
+                // console.log("btnHomeInfo.click:");
+                // console.log(response);
                 var results = response.results;
                 // add the lat and long to the global
                 currentProperty.fullAddress = results[0].formatted_address;
@@ -69,8 +70,8 @@ $(document).ready(function() {
                 currentProperty.googlePlaceID = results[0].place_id;
                 currentProperty.googlePlaceLocation = results[0].geometry.location;
                 currentProperty.zip = results[0].address_components[8].long_name;
-                console.log("currentProperty: ");
-                console.log(currentProperty);
+                // console.log("currentProperty: ");
+                // console.log(currentProperty);
                 getPID();
 
             })
@@ -83,7 +84,13 @@ $(document).ready(function() {
     });
 
     $("body").on("click touch", ".prop-info", function() {
-        initialize($(this).attr("id"));
+        console.log("propAry:");
+        console.log(propertyArry);
+        console.log("this.id:");
+        console.log($(this).attr("id"));
+        console.log("this.location:");
+        console.log(propertyArry[$(this).attr("id")].googlePlaceLocation);
+        createStreetMap(propertyArry[$(this).attr("id")].googlePlaceLocation);
     });
 
     $(window).resize(function() {
@@ -105,8 +112,8 @@ function getPID() {
             method: "GET"
         })
         .done(function(response) {
-            console.log("getPID: ");
-            console.log(response);
+            // console.log("getPID: ");
+            // console.log(response);
             // add the lat and long to the global
             currentProperty.PID = response[0].pid;
             currentProperty.ID = response[0].id;
@@ -127,8 +134,8 @@ function getPropertyUse() {
             method: "GET"
         })
         .done(function(response) {
-            console.log("getPropertyUse: ");
-            console.log(response);
+            // console.log("getPropertyUse: ");
+            // console.log(response);
             if ((response[0].land_use != "SINGLE FAMILY RESIDENTIAL") || parseInt((response[0].units) != 1)) {
                 // this is not a private home.  Tell the user, reset the page and exit
                 alert("Sorry this is not a private home.  Please enter a new address.");
@@ -165,8 +172,8 @@ function getBuildingInfo() {
             method: "GET"
         })
         .done(function(response) {
-            console.log("getBuildingInfo: ");
-            console.log(response);
+            // console.log("getBuildingInfo: ");
+            // console.log(response);
             // push any data to the page
             // available fields:
 
@@ -216,8 +223,8 @@ function getAppraisalInfo() {
             method: "GET"
         })
         .done(function(response) {
-            console.log("getAppraisalInfo: ");
-            console.log(response);
+            // console.log("getAppraisalInfo: ");
+            // console.log(response);
             // push any data to the page
             // available fields:
 
@@ -235,12 +242,12 @@ function getAppraisalInfo() {
 
             // clear out the inputs for the user
 
-        $("#street-name").val("");
-        $("#city").val("");
-        $("#zip-code").val("");
-        $("#street-name").val("");
-        // TODO Validate these inputs
-        $("#city").val("");
+            $("#street-name").val("");
+            $("#city").val("");
+            $("#zip-code").val("");
+            $("#street-name").val("");
+            // TODO Validate these inputs
+            $("#city").val("");
 
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
@@ -325,7 +332,7 @@ function propertyInfoTable(googleID) {
 //             enableCloseButton: false
 //         });
 // }
-function createStreetMap(location){
+function createStreetMap(location) {
     var panorama;
 
     //once the document is loaded, see if google has a streetview image within 50 meters of the given location, and load that panorama
@@ -341,10 +348,9 @@ function createStreetMap(location){
                 navigationControlOptions: {
                     style: google.maps.NavigationControlStyle.SMALL
                 }
-            }; 
+            };
             var panorama = new google.maps.StreetViewPanorama(document.getElementById("street-view"), panoramaOptions);
-        }
-        else{
+        } else {
             //no google streetview image for this location, so hide the streetview div
             $('#' + "street-view").parent().hide();
         }

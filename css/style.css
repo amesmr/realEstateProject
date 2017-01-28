@@ -54,3 +54,7 @@ img {
     height: 500px;
     width: 45%;
 }
+
+th {
+    font-weight: bold;
+}
