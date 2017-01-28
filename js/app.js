@@ -67,8 +67,10 @@ $(document).ready(function() {
                 currentProperty.lat = results[0].geometry.location.lat;
                 currentProperty.lng = results[0].geometry.location.lng;
                 currentProperty.googlePlaceID = results[0].place_id;
+
                 currentProperty.googlePlaceLocation = results[0].geometry.location;
                 currentProperty.zip = results[0].address_components[8].long_name;
+
                 console.log("currentProperty: ");
                 console.log(currentProperty);
                 getPID();
@@ -129,6 +131,11 @@ function getPropertyUse() {
         .done(function(response) {
             console.log("getPropertyUse: ");
             console.log(response);
+//===== Gil 01/28/2017 ========
+            if (!response || response.length === 0) {
+                return;
+            }
+
             if ((response[0].land_use != "SINGLE FAMILY RESIDENTIAL") || parseInt((response[0].units) != 1)) {
                 // this is not a private home.  Tell the user, reset the page and exit
                 alert("Sorry this is not a private home.  Please enter a new address.");
@@ -314,6 +321,7 @@ function propertyInfoTable(googleID) {
 
 // ********************************** Gil's Code ********************************
 
+
 // function initialize() {
 //     panorama = new google.maps.StreetViewPanorama(
 //         document.getElementById('street-view'), {
@@ -349,6 +357,7 @@ function createStreetMap(location){
             $('#' + "street-view").parent().hide();
         }
     });
+
 }
 
 
