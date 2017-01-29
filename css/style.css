@@ -49,7 +49,8 @@ img {
     color: blue;
 }
 
-#street-view {
+#street-view,
+#map-view {
     float: left;
     height: 500px;
     width: 45%;
@@ -58,3 +59,11 @@ img {
 th {
     font-weight: bold;
 }
+
+.tooltip .tooltiptext {
+    width: 120px;
+    top: 100%;
+    left: 50%; 
+    margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
+}
+
