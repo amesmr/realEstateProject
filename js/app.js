@@ -40,6 +40,9 @@ $(document).ready(function() {
 
     $("#getProperty").click(function(event) {
         event.preventDefault();
+         $('#genInfo').hide();
+         $('#addressInput').hide();
+         $('#icons').hide();
         // use google maps to get the lat and long for the address
         // google maps api key AIzaSyBTTpB5r1BNUKiCXbfbbcSfX6M8s867_UY
         var formattedAddress = "address=" + $("#street-name").val().trim() + ",";
