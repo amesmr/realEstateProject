@@ -36,7 +36,6 @@ img {
 	border: 1px solid #8a4419;
     border-style: inset;
 }
-.details {
-	font-size: medium;
-	color:blue;
+th {
+	font-weight: bold;
 }
