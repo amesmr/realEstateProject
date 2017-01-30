@@ -1,7 +1,9 @@
-currentProperty = {
+"use strict"
+var currentProperty = {
     lat: 0,
     lng: 0,
     googlePlaceID: "",
+    googlePlaceLocation: {},
     ID: "",
     PID: "",
     enteredAddress: "",
@@ -21,7 +23,10 @@ currentProperty = {
     school_ratings: "", // via ???
 }
 
-propertyArry = [{}];
+var propertyArry = [{}];
+var panorama;
+var vlat = 35.225218;
+var vlng = -80.847322;
 
 function initPage() {
     // set up for user
@@ -33,13 +38,14 @@ $(document).ready(function() {
 
     initPage();
 
-    $("#submit-button").click(function(event) {
+    $("#getProperty").click(function(event) {
         event.preventDefault();
         // use google maps to get the lat and long for the address
         // google maps api key AIzaSyBTTpB5r1BNUKiCXbfbbcSfX6M8s867_UY
         var formattedAddress = "address=" + $("#street-name").val().trim() + ",";
         formattedAddress += $("#city").val().trim() + ",";;
         formattedAddress += $("#zip-code").val().trim() + ",";
+        currentProperty = new Object();
         currentProperty.enteredAddress = $("#street-name").val().trim();
         // TODO Validate these inputs
         currentProperty.city = $("#city").val().trim();
@@ -55,17 +61,18 @@ $(document).ready(function() {
                 method: "GET"
             })
             .done(function(response) {
-                console.log("btnHomeInfo.click:");
-                console.log(response);
+                // console.log("btnHomeInfo.click:");
+                // console.log(response);
                 var results = response.results;
                 // add the lat and long to the global
                 currentProperty.fullAddress = results[0].formatted_address;
                 currentProperty.lat = results[0].geometry.location.lat;
                 currentProperty.lng = results[0].geometry.location.lng;
                 currentProperty.googlePlaceID = results[0].place_id;
+                currentProperty.googlePlaceLocation = results[0].geometry.location;
                 currentProperty.zip = results[0].address_components[8].long_name;
-                console.log("currentProperty: ");
-                console.log(currentProperty);
+                // console.log("currentProperty: ");
+                // console.log(currentProperty);
                 getPID();
 
             })
@@ -78,7 +85,15 @@ $(document).ready(function() {
     });
 
     $("body").on("click touch", ".prop-info", function() {
-        initialize($(this).attr("id"));
+
+        console.log("propAry:");
+        console.log(propertyArry);
+        console.log("this.id:");
+        console.log($(this).attr("id"));
+        console.log("this.location:");
+        console.log(propertyArry[$(this).attr("id")].googlePlaceLocation);
+        createStreetMap(propertyArry[$(this).attr("id")].googlePlaceLocation);
+
     });
 
     $(window).resize(function() {
@@ -100,8 +115,8 @@ function getPID() {
             method: "GET"
         })
         .done(function(response) {
-            console.log("getPID: ");
-            console.log(response);
+            // console.log("getPID: ");
+            // console.log(response);
             // add the lat and long to the global
             currentProperty.PID = response[0].pid;
             currentProperty.ID = response[0].id;
@@ -122,8 +137,8 @@ function getPropertyUse() {
             method: "GET"
         })
         .done(function(response) {
-            console.log("getPropertyUse: ");
-            console.log(response);
+            // console.log("getPropertyUse: ");
+            // console.log(response);
             if ((response[0].land_use != "SINGLE FAMILY RESIDENTIAL") || parseInt((response[0].units) != 1)) {
                 // this is not a private home.  Tell the user, reset the page and exit
                 alert("Sorry this is not a private home.  Please enter a new address.");
@@ -160,8 +175,8 @@ function getBuildingInfo() {
             method: "GET"
         })
         .done(function(response) {
-            console.log("getBuildingInfo: ");
-            console.log(response);
+            // console.log("getBuildingInfo: ");
+            // console.log(response);
             // push any data to the page
             // available fields:
 
@@ -212,8 +227,174 @@ function getGreatSchoolInfo() {
             method: "GET"
         })
         .done(function(response) {
-                console.log("getGreatSchoolInfo ");
-                console.log(response);
+
+            // console.log("getAppraisalInfo: ");
+            // console.log(response);
+            // push any data to the page
+            // available fields:
+
+            // "tax_year": "2011",
+            // "building_value": "87400",
+            // "extra_features_value": "11900",
+            // "land_value": "19400",
+            // "total_value": "118700.00000"
+            currentProperty.year_assessed = response[0].tax_year;
+            currentProperty.tax_value = response[0].total_value.slice(0, -3);
+            // now we (hopefully) have all of the data, add it to the array
+            // using its google maps place ID as the array key
+            propertyArry[currentProperty.googlePlaceID] = currentProperty;
+            propertyInfoTable(currentProperty.googlePlaceID);
+
+            // clear out the inputs for the user
+
+            $("#street-name").val("");
+            $("#city").val("");
+            $("#zip-code").val("");
+            $("#street-name").val("");
+            // TODO Validate these inputs
+            $("#city").val("");
+
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            console.log('jqXHR: ' + jqXHR);
+            console.log('status: ' + textStatus);
+            console.log('error: ' + errorThrown);
+        });
+}
+
+function propertyInfoTable(googleID) {
+    var tr = $("<tr>");
+    var td_address = $("<td>");
+    var td_city = $("<td>");
+    var td_neighborhood = $("<td>");
+    var td_sqFeet = $("<td>");
+    var td_ppsf = $("<td>");
+    var td_school_ratings = $("<td>");
+    var td_tax_value = $("<td>");
+    var td_estimated_value = $("<td>"); // From Zillow?
+    var td_year_built = $("<td>");
+    var td_stories = $("<td>");
+    var td_bedrooms = $("<td>");
+    var td_full_baths = $("<td>");
+    var td_three_quarter_baths = $("<td>");
+    var td_half_baths = $("<td>");
+
+    // configure the row
+    tr.attr("id", googleID);
+    tr.attr("class", "prop-info");
+    tr.tooltip({ 
+        tip: "#tipTxt", 
+        delay: 0 
+    });
+
+    // add the row to the table
+    $("#properties-list").append(tr);
+
+    // configure the table details
+    td_address.html(propertyArry[googleID].enteredAddress);
+    td_city.html(propertyArry[googleID].city);
+    td_neighborhood.html(propertyArry[googleID].neighborhood);
+    td_sqFeet.html(propertyArry[googleID].sqFeet);
+    td_ppsf.html("$" + propertyArry[googleID].total_value / propertyArry[googleID].sqFeet);
+    td_school_ratings.html(propertyArry[googleID].td_school_ratings);
+    td_tax_value.html("$" + parseInt(propertyArry[googleID].tax_value).toLocaleString() + " (" + propertyArry[googleID].year_assessed + ")");
+    td_estimated_value.html("$" + propertyArry[googleID].total_value);
+    td_year_built.html(propertyArry[googleID].year_built);
+    td_stories.html(propertyArry[googleID].stories);
+    td_bedrooms.html(propertyArry[googleID].bedrooms);
+    td_full_baths.html(propertyArry[googleID].full_baths);
+    td_three_quarter_baths.html(propertyArry[googleID].three_quarter_baths);
+    td_half_baths.html(propertyArry[googleID].half_baths);
+
+    // append INSDIE the table row
+    td_address.appendTo(tr);
+    td_city.appendTo(tr);
+    td_neighborhood.appendTo(tr);
+    td_sqFeet.appendTo(tr);
+    td_ppsf.appendTo(tr);
+    td_school_ratings.appendTo(tr);
+    td_tax_value.appendTo(tr);
+    td_estimated_value.appendTo(tr);
+    td_year_built.appendTo(tr);
+    td_stories.appendTo(tr);
+    td_bedrooms.appendTo(tr);
+    td_full_baths.appendTo(tr);
+    td_three_quarter_baths.appendTo(tr);
+    td_half_baths.appendTo(tr);
+
+    createStreetMap(propertyArry[googleID].googlePlaceLocation);
+}
+
+
+
+
+// ********************************** Gil's Code ********************************
+
+// function initialize() {
+//     panorama = new google.maps.StreetViewPanorama(
+//         document.getElementById('street-view'), {
+//             position: { lat: vlat, lng: vlng },
+//             pov: { heading: 165, pitch: 0 },
+//             //   zoom: 1,
+//             linksControl: false,
+//             panControl: false,
+//             enableCloseButton: false
+//         });
+// }
+function createStreetMap(location){
+   var panorama;
+   var map;
+
+   //once the document is loaded, see if google has a streetview image within 50 meters of the given location, and load that panorama
+   var sv = new google.maps.StreetViewService();
+   
+
+   sv.getPanoramaByLocation(location, 50, function(data, status) {
+       if (status == 'OK') {
+           //google has a streetview image for this location, so attach it to the streetview div
+           var panoramaOptions = {
+               pano: data.location.pano,
+               addressControl: false,
+               navigationControl: true,
+               navigationControlOptions: {
+                   style: google.maps.NavigationControlStyle.SMALL
+               }          
+           };
+
+           var mapOptions = {
+            center: {lat: currentProperty.lat, lng: currentProperty.lng},
+            zoom: 8,
+            scrollwheel: false,
+            zoom: 14
+           };
+
+           var panorama = new google.maps.StreetViewPanorama(document.getElementById("street-view"), panoramaOptions);
+           var map = new google.maps.Map(document.getElementById('map-view'), mapOptions);
+           var marker = new google.maps.Marker({
+             map: map,
+             position: {lat: currentProperty.lat, lng: currentProperty.lng},
+             title: 'Target!'
+           });
+       }
+       else{
+           //no google streetview image for this location, so hide the streetview div
+           $('#' + "street-view").parent().hide();
+           $('#' + "map-view").parent().hide();
+       }
+   });
+
+}
+
+
+// ********************************** Gil's Code END******************************
+
+// ********************************** Houssein's Code ********************************
+
+
+
+
+
+
 
   /*function getGreatSchoolRating() {           
          var queryURL = "http://api.greatschools.org/schools/nearby?key=[vkyg4cq5fpsynnc7fmellgxx]&state=NC& "&lon=" + lng;
