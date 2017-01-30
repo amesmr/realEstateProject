@@ -220,7 +220,38 @@ function getBuildingInfo() {
             console.log('error: ' + errorThrown);
         });
 }
-//------------------------------------------------------------------------//
+
+function getAppraisalInfo() {
+    var queryURL = "http://maps.co.mecklenburg.nc.us/rest/v3/ws_cama_appraisal.php?pid=" + currentProperty.PID;
+
+    $.ajax({
+            url: queryURL,
+            method: "GET"
+        })
+        .done(function(response) {
+            console.log("getAppraisalInfo: ");
+            console.log(response);
+            // push any data to the page
+            // available fields:
+
+            // "tax_year": "2011",
+            // "building_value": "87400",
+            // "extra_features_value": "11900",
+            // "land_value": "19400",
+            // "total_value": "118700.00000"
+            currentProperty.year_assessed = response[0].tax_year;
+            currentProperty.tax_value = response[0].total_value.slice(0, -3);
+            // now we (hopefully) have all of the data, add it to the array
+            // using its google maps place ID as the array key
+            propertyArry[currentProperty.googlePlaceID] = currentProperty;
+            propertyInfoTable(currentProperty.googlePlaceID);
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            console.log('jqXHR: ' + jqXHR);
+            console.log('status: ' + textStatus);
+            console.log('error: ' + errorThrown);
+        });
+}
 
 function getGreatSchoolInfo() {
     var queryURL = "http://api.greatschools.org/schools/nearby?key=[vkyg4cq5fpsynnc7fmellgxx]&state=NC&lat=" + lat + "&lon=" + lng;
@@ -333,6 +364,17 @@ function propertyInfoTable(googleID) {
 
 // ********************************** Gil's Code ********************************
 
+// function initialize() {
+//     panorama = new google.maps.StreetViewPanorama(
+//         document.getElementById('street-view'), {
+//             position: { lat: vlat, lng: vlng },
+//             pov: { heading: 165, pitch: 0 },
+//             //   zoom: 1,
+//             linksControl: false,
+//             panControl: false,
+//             enableCloseButton: false
+//         });
+// }
 function createStreetMap(googleID) {
     var panorama;
     var map;
@@ -660,4 +702,6 @@ $("#button").on("click", function() {
     };
 
 });
+
+
 
