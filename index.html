@@ -111,6 +111,11 @@
                                 <h2 class="center light-blue-text"><i class="material-icons">group</i></h2>
                                 <h5 class="center">Partners</h5>
                                 <p class="light italic"> We have partnered with other sources to provide you with the most up to date information. Currently, we use Google Maps, Zillow.com, Polaris, and BestSchools.org</p>
+                                <br>
+                                <img src="images/gmaps.jpg " width="40px" height="30px">
+                                <img src="images/gs.png " width="40px" height="30px">
+                                <img src="images/gis.png " width="40px" height="30px">
+                                <img src="images/zillow.png " width="40px" height="30px">
                             </div>
                         </div>
                         <div class="col s12 m4">
@@ -118,6 +123,8 @@
                                 <h2 class="center light-blue-text"><i class="material-icons">live_help</i></h2>
                                 <h5 class="center">Feedback</h5>
                                 <p class="light">Love the DecisionData but wish you just had.... Give us your feedback and we will work on it!</p>
+                                <br>
+                                <br>
                                 <div class="row center ">
                                     <!-- <a href="http://materializecss.com/getting-started.html " id="submit-button " class="btn-large waves-effect waves-light orange ">Submit</a> -->
                                 </div>
@@ -128,6 +135,25 @@
             </div>
             <!--div for table of results-->
             <div class='results'>
+             <h3>Results</h3>
+            <table class="bordered highlighted">
+            <thead>
+            <tr>
+                <th>Address</th>
+                <th>Location</th>
+                <th>Neighborhood</th>
+                <th>Square Feet</th>
+                <th>Year Built</th>
+                <th>Stories</th>
+                <th>Bedrooms</th>
+                <th>Baths</th>
+                
+                <th>Lot Size</th>
+                </tr>
+                </thead>
+                <tbody id="results-list">
+                    </tbody>
+                </table>
             </div>
             <!--Map div for results-->
             <div class="Googlemap">
@@ -136,14 +162,13 @@
             <div class="decisionData">
                 <!-- table to display the information gathered-->
                 <h3>Stay or Go Decision Data</h3>
-                <table>
+                <table class="bordered highlighted">
                     <thead>
                         <tr>
                             <th>Address</th>
-                            <th>Location</th>
-                            <th>Neighborhood</th>
-                            <th>Square Feet</th>
+                            <th>Estimated Value</th>
                             <th>Price per Square Foot</th>
+
                             <th>School Rating</th>
                             <!-- ???? -->
                             <th>Tax Value</th>
@@ -154,6 +179,7 @@
                             <th>Full Baths</th>
                             <th>3/4 Baths</th>
                             <th>1/2 Baths</th>
+
                         </tr>
                     </thead>
                     <br>
@@ -163,6 +189,7 @@
                     </tbody>
                 </table>
             </div>
+
             <div class="row">
                 <div id="street-view">
                     <!-- insert street view via javascript -->
@@ -170,6 +197,7 @@
                 <div id="map-view">
                    <!-- insert street map via html -->
                </div>
+
             </div>
         </div>
     </div>

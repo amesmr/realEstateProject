@@ -44,6 +44,7 @@ img {
     border-style: inset;
 }
 
+
 .details {
     font-size: medium;
     color: blue;
@@ -66,4 +67,5 @@ th {
     left: 50%; 
     margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
 }
+
 
