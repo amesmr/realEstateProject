@@ -362,6 +362,8 @@ function propertyInfoTable(googleID) {
     var td_tax_value = $("<td>");
     var td_comps = $("<td>");
     var td_trend = $("<td>");
+    var a_trend = $("<a>");
+    var img_trend = $("<img>")
     var td_school_ratings = $("<td>");
     var td_private_schools = $("<td>");
 
@@ -393,6 +395,12 @@ function propertyInfoTable(googleID) {
     td_tax_value.html("$" + (Number(propertyArry[googleID].subjectTaxValue)).toLocaleString());
     td_comps.html();
     td_trend.html();
+    a_trend.attr("href", currentProperty.subjectChangeOfValueGraph);
+    a_trend.addClass("trendGraph");
+    a_trend.html("View Trend");
+    img_trend.attr("scr", "images/empty.jpg");
+    img_trend.attr("data", googleID);
+    img_trend.addClass("trend");
     td_school_ratings.html();
     td_private_schools.html();
     // td_tax_value.html("$" + parseInt(propertyArry[googleID].subjectTaxValue).toLocaleString() + " (" + propertyArry[googleID].year_assessed + ")");
@@ -418,6 +426,7 @@ function propertyInfoTable(googleID) {
     td_tax_value.appendTo(trProperties);
     td_comps.appendTo(trProperties);
     td_trend.appendTo(trProperties);
+    img_trend.appendTo(td_trend);
     td_school_ratings.appendTo(trProperties);
     td_private_schools.appendTo(trProperties);
 
