@@ -147,6 +147,7 @@
                             <th>Stories</th>
                             <th>Bedrooms</th>
                             <th>Baths</th>
+                            <th>Lot Size</th>
                             <th>Half Baths</th>
                             <th>Lot Size</th>
                         </tr>
@@ -170,14 +171,13 @@
                             <th>Price per Square Foot</th>
                             <th>Tax Value</th>
                             <th>Comparable Properties</th>
-                            <th>Trend</th>   
+                            <th>Trend</th>
                             <th>Rental Estimate</th>
                             <th>School Rating</th>
                             <!-- ???? -->
                             <th>Private Schools</th>
                         </tr>
                     </thead>
-                    
                     <br>
                     <br>
                     <span class=tooltip id="tipTxt">Click to Update the Map and Street View</span>
@@ -192,170 +192,37 @@
                     <!-- insert street view via javascript -->
                 </div>
                 <div id="map-view">
+
+                    <!-- insert street map via html -->
                 </div>
-                   <!-- insert street map via html -->
-               </div>
-                                
-               </div>
-               <!--mortgage calculator-->
-               <div class= id="calculator">
-               <div align="center">
-<p>
-<a href="http://www.mortgagecalculator.org">
-<img src="http://www.mortgagecalculator.org/images/mortgage-calculator-logo2.png" alt="MortgageCalculator" height="19" width="200" border="0">
-</a>
-</p>
-<div align="center">
-<form method="post" action="http://www.mortgagecalculator.org" target="_blank">
-<input type="hidden" name="param[action]" value="calculate">
-<input type="hidden" name="mortgage-calculator-plus" value="2b0b2e2f885a8e63c88ab2efb3775a11">
-<table cellpadding="0" cellspacing="0">
-<tr>
-<td id="params" valign="top">
-<table cellpadding="3" cellspacing="0" width="100%">
-<tr>
-<th colspan="2" align="center">
-</th>
-</tr>
-<tr>
-<td align="right">Home Value:</td>
-<td>
-<input type="number" name="param[homevalue]" value="300000" size="10">
- $</td>
- </tr> 
-<tr>
-<td align="right">Loan amount:</td>
-<td>
-<input type="number" name="param[principal]" value="250000" size="10">
- $</td>
- </tr>
-<tr>
-<td align="right">Interest rate:</td>
-<td>
-<input type="number" name="param[interest_rate]" value="5.0" size="4"> %</td>
-</tr>
-<tr>
-<td align="right">Loan term:</td>
-<td>
-<input type="number" name="param[term]" value="30" size="4"> years</td>
-</tr>
-<tr>
-<td align="right">Start date:</td>
-<td>
-<select name="param[start_month]" id="p_start_month">
-<option label="Jan" value="1">Jan</option>
-<option label="Feb" value="2">Feb</option>
-<option label="Mar" value="3">Mar</option>
-<option label="Apr" value="4">Apr</option>
-<option label="May" value="5">May</option>
-<option label="Jun" value="6">Jun</option>
-<option label="Jul" value="7">Jul</option>
-<option label="Aug" value="8">Aug</option>
-<option label="Sep" value="9">Sep</option>
-<option label="Oct" value="10">Oct</option>
-<option label="Nov" value="11">Nov</option>
-<option label="Dec" value="12">Dec</option>
-</select>
-<select name="param[start_year]" id="p_start_year">
-<option label="2016" value="2016">2016</option>
-<option label="2017" value="2017">2017</option>
-<option label="2018" value="2018">2018</option>
-<option label="2019" value="2019">2019</option>
-<option label="2020" value="2020">2020</option>
-<option label="2021" value="2021">2021</option>
-<option label="2022" value="2022">2022</option>
-<option label="2023" value="2023">2023</option>
-<option label="2024" value="2024">2024</option>
-<option label="2025" value="2025">2025</option>
-<option label="2026" value="2026">2026</option>
-<option label="2027" value="2027">2027</option>
-<option label="2028" value="2028">2028</option>
-<option label="2029" value="2029">2029</option>
-<option label="2030" value="2030">2030</option>
-</select>
-</td>
-</tr>
-<script>
-    var timestamp = new Date();
-    try {
-        document.getElementById("p_start_month").selectedIndex = +timestamp.getMonth();
-        document.getElementById("p_start_year").selectedIndex = +timestamp.getFullYear() - 2016;
-    } catch (_) {
-    }
-</script>
-<tr
-<td align="right">Property tax:</td>
-<td>
-<input type="number" step="any" name="param[property_tax]" value="1.25" size="4"> %</td></tr>
-<tr>
-<td align="right">PMI:</td>
-<td>
-<input type="number" step="any" name="param[pmi]" value="0.5" size="4"> %</td>
-</tr>
-<tr>
-<td colspan="2" align="center" id="calculate_btn">
-<input type="submit" value="Calculate"></td>
-</tr>
-</table>
-<table cellpadding="0" cellspacing="0" width="100%" id="output_params">
-<tr>
-<th colspan="2" align="center"><a href="#" onclick="elems = new Array('draw_charts', 'show_m_vs_w', 'show_annual', 'show_monthly'); for(i in elems) document.getElementById(elems[i]).style.display = (document.getElementById(elems[i]).style.display == 'none') ? '' : 'none'; document.getElementById('outArrow').innerText = (document.getElementById('outArrow').innerText == '»') ? '«' : '»'; return false;" style="text-decoration:none; color:#000000 ">Output parameters <span id="outArrow">»</span></a>
-</th>
-</tr>
-<tr style="display: none" id="draw_charts">
-<td width="10">
-<input type="checkbox" name="param[draw_charts]" value="1" checked="checked">
-</td>
-<td>
-<label for="draw_charts">Draw charts</label>
-</td>
-</tr>
-<tr style="display: none" id="show_m_vs_w">
-<td width="10"><input type="checkbox" name="param[show_m_vs_w]" value="1" checked="checked">
-</td>
-<td>
-<label for="show_m_vs_w">Monthly vs bi-weekly payments</label>
-</td>
-</tr>
-<tr style="display: none" id="show_annual">
-<td width="10">
-<input type="checkbox" name="param[show_annual]" value="1">
-</td>
-<td>
-<label for="show_annual">Show annual amortization table</label>
-</td>
-</tr>
-<tr style="display: none" id="show_monthly">
-<td width="10">
-<input type="checkbox" name="param[show_monthly]" value="1">
-</td>
-<td>
-<label for="show_monthly">Show monthly amortization table</label>
-</td>
-</tr>
-<tr>
-</tr>
-</table>
-</td>
-</tr>
-</table>
-</form>
-</div>
-<p>
-<font size="1"><a href="http://www.mortgagecalculator.org/free-tools/" rel="nofollow">Free Mortgage Calculators</a>
-</font>
-</p>
-</div>
-            </div>
-        </div>
+                <!--mortgage calculator-->
+                
+                        </div>
+                        
+                    </div>
+                </div>
+      <div id="calculator" >     
+    <div style="width:250px; text-align:center; border:2px solid black;">
+    <p style="background-color:#b3f0ff; ">
+    <a href="http://www.mortgagecalculator.org/ " target="_blank ">
+    <img src="http://www.mortgagecalculator.org/free-tools/calculator/mortgage-calculator-logo.png " alt="MortgageCalculator.org. "></a>
+    <br>
+    <iframe src="http://www.mortgagecalculator.org/free-tools/calculator/caller.html " frameborder="0 " width="170px " height="400 " scrolling="no ">
+        
+    </iframe><br><a href="http://www.mortgagecalculator.org/free-tools/ ">
+    <font color="#000000 ">www.MortgageCalculator.org</font>
+    </a>
+    </p>
     </div>
+    </div>
+
+                                    
     <footer class="page-footer orange ">
         <div class="footer-copyright ">
-        <div class="row center"
-            <div class="container2 ">
-                <a class="orange-text text-lighten-3 " id="copyright" href="http://materializecss.com ">Copyright 2017 Team5</a>
+            <div class="row center " <div class="container2 ">
+                <a class="orange-text text-lighten-3 " id="copyright " href="http://materializecss.com ">Copyright 2017 Team5</a>
             </div>
-            </div>
+        </div>
         </div>
     </footer>
     <!--  Scripts-->
