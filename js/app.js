@@ -37,7 +37,6 @@ function initPage() {
 $(document).ready(function() {
 
     initPage();
-
     $("#getProperty").click(function(event) {
         event.preventDefault();
         $('#genInfo').hide();
@@ -274,13 +273,13 @@ function getGreatSchoolInfo() {
             // "total_value": "118700.00000"
             currentProperty.year_assessed = response[0].tax_year;
             currentProperty.tax_value = response[0].total_value.slice(0, -3);
-            // now we (hopefully) have all of the data, add it to the array
+            // now we (hopefully) have all of the data, push it onto the array
             // using its google maps place ID as the array key
             propertyArry[currentProperty.googlePlaceID] = currentProperty;
+            // fill out the tables
             propertyInfoTable(currentProperty.googlePlaceID);
 
             // clear out the inputs for the user
-
             $("#street-name").val("");
             $("#city").val("");
             $("#zip-code").val("");
@@ -297,35 +296,39 @@ function getGreatSchoolInfo() {
 }
 
 function propertyInfoTable(googleID) {
-    var tr = $("<tr>");
-    var td_address = $("<td>");
+
+
+    var trResults = $("<tr>");
+    var td_address1 = $("<td>");
     var td_city = $("<td>");
     var td_neighborhood = $("<td>");
     var td_sqFeet = $("<td>");
-    var td_ppsf = $("<td>");
-    var td_school_ratings = $("<td>");
-    var td_tax_value = $("<td>");
-    var td_estimated_value = $("<td>"); // From Zillow?
     var td_year_built = $("<td>");
     var td_stories = $("<td>");
     var td_bedrooms = $("<td>");
     var td_full_baths = $("<td>");
-    var td_three_quarter_baths = $("<td>");
     var td_half_baths = $("<td>");
 
-    // configure the row
-    tr.attr("id", googleID);
-    tr.attr("class", "prop-info");
-    tr.tooltip({
-        tip: "#tipTxt",
-        delay: 0
-    });
+    var trProperties = $("<tr>");
+    var td_address2 = $("<td>");
+    var td_estimated_value = $("<td>"); // From Zillow?
+    var td_ppsf = $("<td>");
+    var td_school_ratings = $("<td>");
+    var td_tax_value = $("<td>");
 
-    // add the row to the table
-    $("#properties-list").append(tr);
+
+    // configure the row
+    trProperties.attr("id", googleID);
+    trProperties.attr("class", "prop-info");
+
+
+    // add the row to the tables
+    $("#results-list").append(trResults);
+    $("#properties-list").append(trProperties);
 
     // configure the table details
-    td_address.html(propertyArry[googleID].enteredAddress);
+    td_address1.html(propertyArry[googleID].enteredAddress);
+    td_address2.html(propertyArry[googleID].enteredAddress);
     td_city.html(propertyArry[googleID].city);
     td_neighborhood.html(propertyArry[googleID].neighborhood);
     td_sqFeet.html(propertyArry[googleID].sqFeet);
@@ -337,24 +340,27 @@ function propertyInfoTable(googleID) {
     td_stories.html(propertyArry[googleID].stories);
     td_bedrooms.html(propertyArry[googleID].bedrooms);
     td_full_baths.html(propertyArry[googleID].full_baths);
-    td_three_quarter_baths.html(propertyArry[googleID].three_quarter_baths);
     td_half_baths.html(propertyArry[googleID].half_baths);
 
-    // append INSDIE the table row
-    td_address.appendTo(tr);
-    td_city.appendTo(tr);
-    td_neighborhood.appendTo(tr);
-    td_sqFeet.appendTo(tr);
-    td_ppsf.appendTo(tr);
-    td_school_ratings.appendTo(tr);
-    td_tax_value.appendTo(tr);
-    td_estimated_value.appendTo(tr);
-    td_year_built.appendTo(tr);
-    td_stories.appendTo(tr);
-    td_bedrooms.appendTo(tr);
-    td_full_baths.appendTo(tr);
-    td_three_quarter_baths.appendTo(tr);
-    td_half_baths.appendTo(tr);
+
+    // append INSDIE the Results table row
+    td_address1.appendTo(trResults);
+    td_city.appendTo(trResults);
+    td_neighborhood.appendTo(trResults);
+    td_sqFeet.appendTo(trResults);
+    td_year_built.appendTo(trResults);
+    td_stories.appendTo(trResults);
+    td_bedrooms.appendTo(trResults);
+    td_full_baths.appendTo(trResults);
+    td_half_baths.appendTo(trResults);
+
+    // append INSDIE the Properties table row
+    td_address2.appendTo(trProperties);
+    td_estimated_value.appendTo(trProperties);
+    td_ppsf.appendTo(trProperties);
+    td_school_ratings.appendTo(trProperties);
+    td_tax_value.appendTo(trProperties);
+
 
     createStreetMap(googleID);
 }
