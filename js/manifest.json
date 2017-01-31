@@ -1,0 +1,12 @@
+{
+  "name": "Detect if an extension installed",
+  "description": "Detect if an extension installed",
+  "version": "0.1",
+  "manifest_version": 2,
+  "permissions": [
+    "management"
+  ],
+  "browser_action": {
+    "default_popup": "popup.html"
+  }
+}

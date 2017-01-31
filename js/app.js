@@ -1,32 +1,44 @@
 "use strict"
-var currentProperty = {
-    lat: 0,
-    lng: 0,
-    googlePlaceID: "",
-    googlePlaceLocation: {},
-    ID: "",
-    PID: "",
-    enteredAddress: "",
-    fullAddress: "",
-    city: "",
-    zip: "",
-    tax_value: "", // via Mecklenberg Co. API
-    year_assessed: "", // via Mecklenberg Co. API
-    total_value: "", // Zillow API
-    sqFeet: "", // via Mecklenberg Co. API
-    full_baths: "", // via Mecklenberg Co. API
-    three_quarter_baths: "", // via Mecklenberg Co. API
-    half_baths: "", // via Mecklenberg Co. API
-    neighborhood: "", // via Mecklenberg Co. API
-    year_built: "", // via Mecklenberg Co. API
-    stories: "", // via Mecklenberg Co. API
-    school_ratings: "", // via ???
-}
+// var currentProperty = {
+//     lat: 0,
+//     lng: 0,
+//     googlePlaceID: "",
+//     googlePlaceLocation: {},
+//     ID: "",
+//     PID: "",
+//     enteredAddress: "",
+//     fullAddress: "",
+//     city: "",
+//     zip: "",
+//     tax_value: "", // via Mecklenberg Co. API
+//     year_assessed: "", // via Mecklenberg Co. API
+//     total_value: "", // Zillow API
+//     sqFeet: "", // via Mecklenberg Co. API
+//     full_baths: "", // via Mecklenberg Co. API
+//     three_quarter_baths: "", // via Mecklenberg Co. API
+//     half_baths: "", // via Mecklenberg Co. API
+//     neighborhood: "", // via Mecklenberg Co. API
+//     year_built: "", // via Mecklenberg Co. API
+//     stories: "", // via Mecklenberg Co. API
+//     school_ratings: "", // via ???
+// }
+var currentProperty = {};
 
 var propertyArry = [{}];
-var panorama;
-var vlat = 35.225218;
-var vlng = -80.847322;
+
+var propertyInfo = {};
+var subresponse1 = {};
+var subresponse2 = {};
+var subresponse3 = {};
+var subRecentHistory = {};
+var subRecentHistoryIsValid = true;
+var zpid;
+var searchErrorCode;
+var searchErrorText;
+var chartErrorCode;
+var chartErrorText;
+var compsErrorCode;
+var compsErrorText;
 
 function initPage() {
     // set up for user
@@ -77,16 +89,17 @@ $(document).ready(function() {
                 // console.log(response);
                 var results = response.results;
                 // add the lat and long to the global
-                currentProperty.fullAddress = results[0].formatted_address;
+                // currentProperty.fullAddress = results[0].formatted_address;
                 currentProperty.lat = results[0].geometry.location.lat;
                 currentProperty.lng = results[0].geometry.location.lng;
                 currentProperty.googlePlaceID = results[0].place_id;
                 currentProperty.googlePlaceLocation = results[0].geometry.location;
-                currentProperty.zip = results[0].address_components[8].long_name;
+                // currentProperty.zip = results[0].address_components[8].long_name;
                 // console.log("currentProperty: ");
                 // console.log(currentProperty);
-                zillowInfo();
-                getPID();
+                console.log("Before Zillow.  googleID = " + currentProperty.googlePlaceID);
+                zillowInfo(currentProperty.googlePlaceID);
+                // getPID();
 
             })
             .fail(function(jqXHR, textStatus, errorThrown) {
@@ -109,11 +122,32 @@ $(document).ready(function() {
 
     });
 
-    $(window).resize(function() {
-        // reSize();
-    });
 
-    // reSize();
+    // Below is the code to check whether the Chrome Extension is installed.
+    // Can't find the link to include the chrome.management API
+
+    // var extensionIds = [
+    //     ["Allow-Control-Allow-Origin: *", "nlfbmbojpeacfghkpbjhddihlkkiljbi"],
+    // ];
+
+    // extensionIds.forEach(function(extension) {
+    //     var output = document.getElementById('output');
+    //     chrome.management.get(extension[1], function(result) {
+    //         var extensionElement = document.createElement('div');
+
+    //         console.log(result);
+
+    //         if (result) {
+    //             extensionElement.innerHTML = "" + "<h3>" + result.name + " (" + result.id + ")</h3>" + "<p>" + result.description + "</p>";
+    //         } else {
+    //             extensionElement.innerHTML = "" + "<h3>" + extension[0] + " (" + extension[1] + ")</h3>" + "<p style=\"color: red;\">Not installed</p>";
+    //         }
+
+    //         output.appendChild(extensionElement);
+    //     });
+    // });
+
+
 });
 
 // function getPID() {
@@ -152,11 +186,11 @@ $(document).ready(function() {
 //         .done(function(response) {
 //             // console.log("getPropertyUse: ");
 //             // console.log(response);
-//             if ((response[0].land_use != "SINGLE FAMILY RESIDENTIAL") || parseInt((response[0].units) != 1)) {
-//                 // this is not a private home.  Tell the user, reset the page and exit
-//                 alert("Sorry this is not a private home.  Please enter a new address.");
-//                 initPage();
-//                 return false;
+//            if ((response[0].land_use != "SINGLE FAMILY RESIDENTIAL") || parseInt((response[0].units)// != 1)) {
+//                // this is not a private home.  Tell the user, reset the page and exit
+//                alert("Sorry this is not a private home.  Please enter a new address.");
+//                initPage();
+//                return false;
 //             } else {
 //                 // show the panel and fill its header
 //                 $("#currentHome").html("<h3>" + currentProperty.fullAddress + "</h3>");
@@ -169,7 +203,7 @@ $(document).ready(function() {
 //                 // "neighborhood_code": "L118",
 //                 // "neighborhood": "ALAMANCE",
 //                 // "land_unit_type": "LT"
-//                 currentProperty.neighborhood = response[0].neighborhood;
+//                currentProperty.neighborhood = response[0].neighborhood;
 //                 getBuildingInfo();
 //             }
 //         })
@@ -213,13 +247,13 @@ $(document).ready(function() {
 //             // "building_type": "RES",
 //             // "building_value": "87400"
 //             var sqft = response[0].heated_square_feet.split(".");
-//             currentProperty.sqFeet = sqft[0];
-//             currentProperty.year_built = response[0].year_built;
-//             currentProperty.stories = response[0].stories;
-//             currentProperty.bedrooms = response[0].bedrooms;
-//             currentProperty.full_baths = response[0].full_baths;
-//             currentProperty.three_quarter_baths = response[0].three_quarter_baths;
-//             currentProperty.half_baths = response[0].half_baths;
+//            currentProperty.sqFeet = sqft[0];
+//            currentProperty.year_built = response[0].year_built;
+//            currentProperty.stories = response[0].stories;
+//            currentProperty.bedrooms = response[0].bedrooms;
+//            currentProperty.full_baths = response[0].full_baths;
+//            currentProperty.three_quarter_baths = response[0].three_quarter_baths;
+//            currentProperty.half_baths = response[0].half_baths;
 
 //             getAppraisalInfo();
 
@@ -249,12 +283,12 @@ $(document).ready(function() {
 //             // "extra_features_value": "11900",
 //             // "land_value": "19400",
 //             // "total_value": "118700.00000"
-//             currentProperty.year_assessed = response[0].tax_year;
-//             currentProperty.tax_value = response[0].total_value.slice(0, -3);
-//             // now we (hopefully) have all of the data, add it to the array
-//             // using its google maps place ID as the array key
-//             propertyArry[currentProperty.googlePlaceID] = currentProperty;
-//             propertyInfoTable(currentProperty.googlePlaceID);
+//            currentProperty.year_assessed = response[0].tax_year;
+//            currentProperty.tax_value = response[0].total_value.slice(0, -3);
+//            // now we (hopefully) have all of the data, add it to the array
+//            // using its google maps place ID as the array key
+//            propertyArry[currentProperty.googlePlaceID] = currentProperty;
+//            propertyInfoTable(currentProperty.googlePlaceID);
 //         })
 //         .fail(function(jqXHR, textStatus, errorThrown) {
 //             console.log('jqXHR: ' + jqXHR);
@@ -306,80 +340,111 @@ $(document).ready(function() {
 //         });
 // }
 
-// function propertyInfoTable(googleID) {
+function propertyInfoTable(googleID) {
 
 
-//     var trResults = $("<tr>");
-//     var td_address1 = $("<td>");
-//     var td_city = $("<td>");
-//     var td_neighborhood = $("<td>");
-//     var td_sqFeet = $("<td>");
-//     var td_year_built = $("<td>");
-//     var td_stories = $("<td>");
-//     var td_bedrooms = $("<td>");
-//     var td_full_baths = $("<td>");
-//     var td_half_baths = $("<td>");
+    var trResults = $("<tr>");
+    var td_address1 = $("<td>");
+    var td_city = $("<td>");
+    var td_neighborhood = $("<td>");
+    var td_sqFeet = $("<td>");
+    var td_year_built = $("<td>");
+    var td_lot_size = $("<td>");
+    // var td_stories = $("<td>");
+    var td_bedrooms = $("<td>");
+    var td_baths = $("<td>");
+    // var td_half_baths = $("<td>");
 
-//     var trProperties = $("<tr>");
-//     var td_address2 = $("<td>");
-//     var td_estimated_value = $("<td>"); // From Zillow?
-//     var td_ppsf = $("<td>");
-//     var td_school_ratings = $("<td>");
-//     var td_tax_value = $("<td>");
+    var trProperties = $("<tr>");
+    var td_address2 = $("<td>");
+    var td_estimated_value = $("<td>"); // From Zillow?
+    var td_ppsf = $("<td>");
+    var td_tax_value = $("<td>");
+    var td_comps = $("<td>");
+    var td_trend = $("<td>");
+    var td_school_ratings = $("<td>");
+    var td_private_schools = $("<td>");
 
+    // configure the row
 
-//     // configure the row
-
-//     trProperties.attr("id", googleID);
-//     trProperties.attr("class", "prop-info");
-
-
-//     // add the row to the tables
-//     $("#results-list").append(trResults);
-//     $("#properties-list").append(trProperties);
+    trProperties.attr("id", googleID);
+    trProperties.attr("class", "prop-info");
 
 
-//     // configure the table details
-//     td_address1.html(propertyArry[googleID].enteredAddress);
-//     td_address2.html(propertyArry[googleID].enteredAddress);
-//     td_city.html(propertyArry[googleID].city);
-//     td_neighborhood.html(propertyArry[googleID].neighborhood);
-//     td_sqFeet.html(propertyArry[googleID].sqFeet);
-//     td_ppsf.html("$" + propertyArry[googleID].total_value / propertyArry[googleID].sqFeet);
-//     td_school_ratings.html(propertyArry[googleID].td_school_ratings);
-//     td_tax_value.html("$" + parseInt(propertyArry[googleID].tax_value).toLocaleString() + " (" + propertyArry[googleID].year_assessed + ")");
-//     td_estimated_value.html("$" + propertyArry[googleID].total_value);
-//     td_year_built.html(propertyArry[googleID].year_built);
-//     td_stories.html(propertyArry[googleID].stories);
-//     td_bedrooms.html(propertyArry[googleID].bedrooms);
-//     td_full_baths.html(propertyArry[googleID].full_baths);
-//     td_half_baths.html(propertyArry[googleID].half_baths);
+    // add the row to the tables
+    $("#results-list").append(trResults);
+    $("#properties-list").append(trProperties);
 
 
-//     // append INSDIE the Results table row
-//     td_address1.appendTo(trResults);
-//     td_city.appendTo(trResults);
-//     td_neighborhood.appendTo(trResults);
-//     td_sqFeet.appendTo(trResults);
-//     td_year_built.appendTo(trResults);
-//     td_stories.appendTo(trResults);
-//     td_bedrooms.appendTo(trResults);
-//     td_full_baths.appendTo(trResults);
-//     td_half_baths.appendTo(trResults);
+    // configure the results table details
+    td_address1.html(propertyArry[googleID].enteredAddress);
+    td_city.html(propertyArry[googleID].subjectCity);
+    td_neighborhood.html(propertyArry[googleID].subjectNeighborhoodName);
+    td_sqFeet.html(Number(propertyArry[googleID].subjectHeatedSqFt).toLocaleString());
+    td_year_built.html(propertyArry[googleID].subjectYearBuilt);
+    td_lot_size.html(parseInt(propertyArry[googleID].subjectLotSize).toLocaleString());
+    td_bedrooms.html(propertyArry[googleID].subjectBedrooms);
+    td_baths.html(propertyArry[googleID].subjectBathrooms);
 
-//     // append INSDIE the Properties table row
-//     td_address2.appendTo(trProperties);
-//     td_estimated_value.appendTo(trProperties);
-//     td_ppsf.appendTo(trProperties);
-//     td_school_ratings.appendTo(trProperties);
-//     td_tax_value.appendTo(trProperties);
+    // configure the properties table details
+    td_address2.html(propertyArry[googleID].enteredAddress);
+    td_estimated_value.html("$" + parseInt(propertyArry[googleID].subjectZestimate).toLocaleString());
+    td_ppsf.html("$" + (propertyArry[googleID].subjectZestimate / propertyArry[googleID].subjectHeatedSqFt).toFixed(2));
+    td_tax_value.html("$" + (Number(propertyArry[googleID].subjectTaxValue)).toLocaleString());
+    td_comps.html();
+    td_trend.html();
+    td_school_ratings.html();
+    td_private_schools.html();
+    // td_tax_value.html("$" + parseInt(propertyArry[googleID].subjectTaxValue).toLocaleString() + " (" + propertyArry[googleID].year_assessed + ")");
+    // td_stories.html(propertyArry[googleID].stories);;
+    // td_half_baths.html(propertyArry[googleID].half_baths);
 
 
-//     createStreetMap(googleID);
-// }
+    // append INSDIE the Results table row
+    td_address1.appendTo(trResults);
+    td_city.appendTo(trResults);
+    td_neighborhood.appendTo(trResults);
+    td_sqFeet.appendTo(trResults);
+    td_year_built.appendTo(trResults);
+    td_lot_size.appendTo(trResults);
+    td_bedrooms.appendTo(trResults);
+    td_baths.appendTo(trResults);
+    // td_half_baths.appendTo(trResults);
+
+    // append INSDIE the Properties table row
+    td_address2.appendTo(trProperties);
+    td_estimated_value.appendTo(trProperties);
+    td_ppsf.appendTo(trProperties);
+    td_tax_value.appendTo(trProperties);
+    td_comps.appendTo(trProperties);
+    td_trend.appendTo(trProperties);
+    td_school_ratings.appendTo(trProperties);
+    td_private_schools.appendTo(trProperties);
+
+    // clear out the inputs for the user
+    $("#street-name").val("");
+    $("#city").val("");
+    $("#zip-code").val("");
+    $("#street-name").val("");
+    // TODO Validate these inputs
+    $("#city").val("");
+
+    createStreetMap(googleID);
+}
 
 
-
+function commafy(num) {
+    var nStr = num.value + '';
+    nStr = nStr.replace(/\,/g, "");
+    var x = nStr.split('.');
+    var x1 = x[0];
+    var x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    num.value = x1 + x2;
+}
 
 // ********************************** Gil's Code ********************************
 
@@ -450,18 +515,12 @@ function createStreetMap(googleID) {
 // var propertyCity = "Charlotte";
 // var propertyState = "NC";
 
-var propertyInfo = {};
-var subresponse1 = {};
-var subresponse2 = {};
-var subresponse3 = {};
-var subresponse4 = {};
-var subresponse4IsValid = true;
-var zpid;
+
 function zillowInfo() {
 
-    var queryURL = "https://www.zillow.com/webservice/GetDeepSearchResults.htm?zws-id=X1-ZWz1fm57445z4b_1sm5d&rentzestimate=true&address=" 
-    queryURL+= currentProperty.enteredAddress;
-    queryURL+= "&citystatezip="+currentProperty.city + ",NC";
+    var queryURL = "https://www.zillow.com/webservice/GetDeepSearchResults.htm?zws-id=X1-ZWz1fm57445z4b_1sm5d&rentzestimate=true&address="
+    queryURL += currentProperty.enteredAddress;
+    queryURL += "&citystatezip=" + currentProperty.city + ",NC";
     queryURL = queryURL.replace(/ /g, "+");
 
     $.ajax({
@@ -469,71 +528,71 @@ function zillowInfo() {
         method: "GET"
             // dataType: "jsonp"
     }).done(function(response) {
-        console.log(response);  
+        // console.log(response);  
         //Converting to Json
         var jsonresp1 = xmlToJson(response);
         //console.log(jsonresp1); // Whole Json object
         var obj1 = jsonresp1;
         //console.log(obj1[Object.keys(obj1)[0]]); // Part of Json object
-        var deepSearchErrorCode = obj1[Object.keys(obj1)[0]].message.code["#text"];
-        var deepSearchErrorText = obj1[Object.keys(obj1)[0]].message.text["#text"];
-        console.log("Deep Search " + deepSearchErrorText + " - Error Code: " + deepSearchErrorCode);
+        searchErrorCode = obj1[Object.keys(obj1)[0]].message.code["#text"];
+        searchErrorText = obj1[Object.keys(obj1)[0]].message.text["#text"];
+        // console.log("Deep Search " + deepSearchErrorText + " - Error Code: " + deepSearchErrorCode);
         var responseObj1 = obj1[Object.keys(obj1)[0]].response;
         subresponse1 = responseObj1.results.result;
-        console.log("-------- Deep Search Results --------");
-        //console.log(subresponse1);// usefull part of the Json Object
         // Adding the usefull info to the global object
-        propertyInfo.errorCode = deepSearchErrorCode;
-        console.log("Deep Search Error Code: " + propertyInfo.errorCode);
-        propertyInfo.errorText = deepSearchErrorText;
-        console.log("Deep Search Error Text: " + propertyInfo.errorText);
-        propertyInfo.subjectStreetAddress = subresponse1.address.street["#text"];
-        console.log("subjectStreetAddress: " + propertyInfo.subjectStreetAddress);
-        propertyInfo.subjectCity = subresponse1.address.city["#text"];
-        console.log("subjectCity: " + propertyInfo.subjectCity);
-        propertyInfo.subjectState = subresponse1.address.state["#text"];
-        console.log("subjectState: " + propertyInfo.subjectState);
-        propertyInfo.subjectZipCode = subresponse1.address.zipcode["#text"];
-        console.log("subjectZipCode: " + propertyInfo.subjectZipCode);
-        propertyInfo.subjectLatitude = subresponse1.address.latitude["#text"];
-        console.log("subjectLatitude: " + propertyInfo.subjectLatitude);
-        propertyInfo.subjectLongitude = subresponse1.address.longitude["#text"];
-        console.log("subjectLongitude: " + propertyInfo.subjectLongitude);
-        propertyInfo.subjectNeighborhoodName = subresponse1.localRealEstate.region["@attributes"].name;
-        console.log("subjectNeighborhoodName: " + propertyInfo.subjectNeighborhoodName);
-        propertyInfo.subjectNeighborhoodType = subresponse1.localRealEstate.region["@attributes"].type;
-        console.log("subjectNeighborhoodType: " + propertyInfo.subjectNeighborhoodType);
-        propertyInfo.subjectPropertyType = subresponse1.useCode["#text"];
-        console.log("subjectPropertyType: " + propertyInfo.subjectPropertyType);
-        propertyInfo.subjectBedrooms = subresponse1.bedrooms["#text"];
-        console.log("subjectBedrooms: " + propertyInfo.subjectBedrooms);
-        propertyInfo.subjectBathrooms = subresponse1.bathrooms["#text"];
-        console.log("subjectBathrooms: " + propertyInfo.subjectBathrooms);
-        propertyInfo.subjectHeatedSqFt = subresponse1.finishedSqFt["#text"];
-        console.log("subjectHeatedSqFt: " + propertyInfo.subjectHeatedSqFt);
-        propertyInfo.subjectLotSize = subresponse1.lotSizeSqFt["#text"];
-        console.log("subjectLotSize: " + propertyInfo.subjectLotSize);
-        propertyInfo.subjectYearBuilt = subresponse1.yearBuilt["#text"];
-        console.log("subjectYearBuilt: " + propertyInfo.subjectYearBuilt);
-        propertyInfo.subjectTaxValue = subresponse1.taxAssessment["#text"];
-        console.log("subjectTaxValue: " + propertyInfo.subjectTaxValue);
-        propertyInfo.subjectLastSoldPrice = subresponse1.lastSoldPrice["#text"];
-        console.log("subjectLastSoldPrice: " + propertyInfo.subjectLastSoldPrice);
-        propertyInfo.subjectLastSoldDate = subresponse1.lastSoldDate["#text"];
-        console.log("subjectLastSoldDate: " + propertyInfo.subjectLastSoldDate);
-        propertyInfo.subjectZestimate = subresponse1.zestimate.amount["#text"];
-        console.log("subjectZestimate: " + propertyInfo.subjectZestimate);
-        propertyInfo.subjectZestimateDate = subresponse1.zestimate["last-updated"]["#text"];
-        console.log("subjectZestimateDate: " + propertyInfo.subjectZestimateDate);
-        propertyInfo.subjectZestimateRangeHigh = subresponse1.zestimate.valuationRange.high["#text"];
-        console.log("subjectZestimateRangeHigh: " + propertyInfo.subjectZestimateRangeHigh);
-        propertyInfo.subjectZestimateRangeLow = subresponse1.zestimate.valuationRange.low["#text"];
-        console.log("subjectZestimateRangeLow: " + propertyInfo.subjectZestimateRangeLow);
-        propertyInfo.subjectRentZestimate = subresponse1.rentzestimate.amount["#text"];
-        console.log("subjectRentZestimate: " + propertyInfo.subjectRentZestimate);
-        propertyInfo.subjectZPID = subresponse1.zpid["#text"];
-        console.log("subjectZPID: " + propertyInfo.subjectZPID);
-        zpid = propertyInfo.subjectZPID;
+        currentProperty.errorCode = searchErrorCode;
+        currentProperty.errorText = searchErrorText;
+        currentProperty.subjectStreetAddress = subresponse1.address.street["#text"];
+        currentProperty.subjectCity = subresponse1.address.city["#text"];
+        currentProperty.subjectState = subresponse1.address.state["#text"];
+        currentProperty.subjectZipCode = subresponse1.address.zipcode["#text"];
+        currentProperty.subjectLatitude = subresponse1.address.latitude["#text"];
+        currentProperty.subjectLongitude = subresponse1.address.longitude["#text"];
+        currentProperty.subjectNeighborhoodName = subresponse1.localRealEstate.region["@attributes"].name;
+        currentProperty.subjectNeighborhoodType = subresponse1.localRealEstate.region["@attributes"].type;
+        currentProperty.subjectPropertyType = subresponse1.useCode["#text"];
+        currentProperty.subjectBedrooms = subresponse1.bedrooms["#text"];
+        currentProperty.subjectBathrooms = subresponse1.bathrooms["#text"];
+        currentProperty.subjectHeatedSqFt = subresponse1.finishedSqFt["#text"];
+        currentProperty.subjectLotSize = subresponse1.lotSizeSqFt["#text"];
+        currentProperty.subjectYearBuilt = subresponse1.yearBuilt["#text"];
+        currentProperty.subjectTaxValue = subresponse1.taxAssessment["#text"];
+        currentProperty.subjectLastSoldPrice = subresponse1.lastSoldPrice["#text"];
+        currentProperty.subjectLastSoldDate = subresponse1.lastSoldDate["#text"];
+        currentProperty.subjectZestimate = subresponse1.zestimate.amount["#text"];
+        currentProperty.subjectZestimateDate = subresponse1.zestimate["last-updated"]["#text"];
+        currentProperty.subjectZestimateRangeHigh = subresponse1.zestimate.valuationRange.high["#text"];
+        currentProperty.subjectZestimateRangeLow = subresponse1.zestimate.valuationRange.low["#text"];
+        currentProperty.subjectRentZestimate = subresponse1.rentzestimate.amount["#text"];
+        currentProperty.subjectZPID = subresponse1.zpid["#text"];
+        // console.log("-------- Deep Search Results --------");
+        // console.log(subresponse1);// usefull part of the Json Object
+        // console.log("Deep Search Error Code: " + currentProperty.errorCode);
+        // console.log("Deep Search Error Text: " + currentProperty.errorText);
+        // console.log("subjectStreetAddress: " + currentProperty.subjectStreetAddress);
+        // console.log("subjectCity: " + currentProperty.subjectCity);
+        // console.log("subjectState: " + currentProperty.subjectState);
+        // console.log("subjectZipCode: " + currentProperty.subjectZipCode);
+        // console.log("subjectLatitude: " + currentProperty.subjectLatitude);
+        // console.log("subjectLongitude: " + currentProperty.subjectLongitude);
+        // console.log("subjectNeighborhoodName: " + currentProperty.subjectNeighborhoodName);
+        // console.log("subjectNeighborhoodType: " + currentProperty.subjectNeighborhoodType);
+        // console.log("subjectPropertyType: " + currentProperty.subjectPropertyType);
+        // console.log("subjectBedrooms: " + currentProperty.subjectBedrooms);
+        // console.log("subjectBathrooms: " + currentProperty.subjectBathrooms);
+        // console.log("subjectHeatedSqFt: " + currentProperty.subjectHeatedSqFt);
+        // console.log("subjectLotSize: " + currentProperty.subjectLotSize);
+        // console.log("subjectYearBuilt: " + currentProperty.subjectYearBuilt);
+        // console.log("subjectTaxValue: " + currentProperty.subjectTaxValue);
+        // console.log("subjectLastSoldPrice: " + currentProperty.subjectLastSoldPrice);
+        // console.log("subjectLastSoldDate: " + currentProperty.subjectLastSoldDate);
+        // console.log("subjectZestimate: " + currentProperty.subjectZestimate);
+        // console.log("subjectZestimateDate: " + currentProperty.subjectZestimateDate);
+        // console.log("subjectZestimateRangeHigh: " + currentProperty.subjectZestimateRangeHigh);
+        // console.log("subjectZestimateRangeLow: " + currentProperty.subjectZestimateRangeLow);
+        // console.log("subjectRentZestimate: " + currentProperty.subjectRentZestimate);
+        // console.log("subjectZPID: " + currentProperty.subjectZPID);
+        zpid = currentProperty.subjectZPID;
         console.log("-------------------------------------");
 
     }).then(function() {
@@ -551,15 +610,15 @@ function zillowInfo() {
             var obj2 = jsonresp2;
             //console.log(obj2[Object.keys(obj2)[0]]);  
             var responseObj2 = obj2[Object.keys(obj2)[0]]; // Part of Json object
-            var chartErrorCode = responseObj2.message.code["#text"];
-            var chartErrorText = responseObj2.message.text["#text"];
-            console.log("Chart Search " + chartErrorText + " - Error Code: " + chartErrorCode);
+            chartErrorCode = responseObj2.message.code["#text"];
+            chartErrorText = responseObj2.message.text["#text"];
             subresponse2 = responseObj2.response;
-            console.log("--------------- Chart ---------------");
             //console.log(subresponse2);
-            propertyInfo.subjectChangeOfValueGraph = subresponse2.url["#text"];
-            console.log("subjectChangeOfValueGraph: " + propertyInfo.subjectChangeOfValueGraph);
-            console.log("-------------------------------------");
+            currentProperty.subjectChangeOfValueGraph = subresponse2.url["#text"];
+            // console.log("Chart Search " + chartErrorText + " - Error Code: " + chartErrorCode);
+            // console.log("--------------- Chart ---------------");
+            // console.log("subjectChangeOfValueGraph: " + currentProperty.subjectChangeOfValueGraph);
+            // console.log("-------------------------------------");
 
         });
     }).then(function() {
@@ -578,87 +637,87 @@ function zillowInfo() {
             var obj3 = jsonresp3;
             //console.log(obj3[Object.keys(obj3)[0]]); // Part of Json object 
             var responseObj3 = obj3[Object.keys(obj3)[0]];
-            var deepCompErrorCode = responseObj3.message.code["#text"];
-            var deepCompErrorText = responseObj3.message.text["#text"];
-            console.log("Deep Comp Search " + deepCompErrorText + " - Error Code: " + deepCompErrorCode);
+            compsErrorCode = responseObj3.message.code["#text"];
+            compsErrorText = responseObj3.message.text["#text"];
             subresponse3 = responseObj3.response;
-            console.log("------------ Deep Comps ------------");
             //console.log(subresponse3); // usefull part of Json object
-            propertyInfo.comp1Score = subresponse3.properties.comparables.comp["0"]["@attributes"].score;
-            console.log("Comp1 Score: " + propertyInfo.comp1Score);
-            propertyInfo.comp1HeatedSqFt = subresponse3.properties.comparables.comp["0"].finishedSqFt["#text"];
-            console.log("Comp1 Heated SqFt: " + propertyInfo.comp1HeatedSqFt);
-            propertyInfo.comp1LastSoldPrice = subresponse3.properties.comparables.comp["0"].lastSoldPrice["#text"];
-            console.log("Comp1 Last Sold Price: " + propertyInfo.comp1LastSoldPrice);
-            propertyInfo.comp1LastSoldDate = subresponse3.properties.comparables.comp["0"].lastSoldDate["#text"];
-            console.log("Comp1 Last Sold Date: " + propertyInfo.comp1LastSoldDate);
-            propertyInfo.comp1LotSize = subresponse3.properties.comparables.comp["0"].lotSizeSqFt["#text"];
-            console.log("Comp1 Lot Size: " + propertyInfo.comp1LotSize);
-            propertyInfo.comp1Zestimate = subresponse3.properties.comparables.comp["0"].zestimate.amount["#text"];
-            console.log("Comp1 Zestimate: " + propertyInfo.comp1Zestimate);
-            propertyInfo.comp1Zpid = subresponse3.properties.comparables.comp["0"].zpid["#text"];
-            console.log("Comp1 Zpid: " + propertyInfo.comp1Zpid);
+            currentProperty.comp1Score = subresponse3.properties.comparables.comp["0"]["@attributes"].score;
+            currentProperty.comp1HeatedSqFt = subresponse3.properties.comparables.comp["0"].finishedSqFt["#text"];
+            currentProperty.comp1LastSoldPrice = subresponse3.properties.comparables.comp["0"].lastSoldPrice["#text"];
+            currentProperty.comp1LastSoldDate = subresponse3.properties.comparables.comp["0"].lastSoldDate["#text"];
+            currentProperty.comp1LotSize = subresponse3.properties.comparables.comp["0"].lotSizeSqFt["#text"];
+            currentProperty.comp1Zestimate = subresponse3.properties.comparables.comp["0"].zestimate.amount["#text"];
+            currentProperty.comp1Zpid = subresponse3.properties.comparables.comp["0"].zpid["#text"];
 
-            propertyInfo.comp2Score = subresponse3.properties.comparables.comp["1"]["@attributes"].score;
-            console.log("Comp2 Score: " + propertyInfo.comp2Score);
-            propertyInfo.comp2HeatedSqFt = subresponse3.properties.comparables.comp["1"].finishedSqFt["#text"];
-            console.log("Comp2 Heated SqFt: " + propertyInfo.comp2HeatedSqFt);
-            propertyInfo.comp2LastSoldPrice = subresponse3.properties.comparables.comp["1"].lastSoldPrice["#text"];
-            console.log("Comp2 Last Sold Price: " + propertyInfo.comp2LastSoldPrice);
-            propertyInfo.comp2LastSoldDate = subresponse3.properties.comparables.comp["1"].lastSoldDate["#text"];
-            console.log("Comp2 Last Sold Date: " + propertyInfo.comp2LastSoldDate);
-            propertyInfo.comp2LotSize = subresponse3.properties.comparables.comp["1"].lotSizeSqFt["#text"];
-            console.log("Comp2 Lot Size: " + propertyInfo.comp2LotSize);
-            propertyInfo.comp2Zestimate = subresponse3.properties.comparables.comp["1"].zestimate.amount["#text"];
-            console.log("Comp2 Zestimate: " + propertyInfo.comp2Zestimate);
-            propertyInfo.comp2Zpid = subresponse3.properties.comparables.comp["1"].zpid["#text"];
-            console.log("Comp2 Zpid: " + propertyInfo.comp2Zpid);
+            currentProperty.comp2Score = subresponse3.properties.comparables.comp["1"]["@attributes"].score;
+            currentProperty.comp2HeatedSqFt = subresponse3.properties.comparables.comp["1"].finishedSqFt["#text"];
+            currentProperty.comp2LastSoldPrice = subresponse3.properties.comparables.comp["1"].lastSoldPrice["#text"];
+            currentProperty.comp2LastSoldDate = subresponse3.properties.comparables.comp["1"].lastSoldDate["#text"];
+            currentProperty.comp2LotSize = subresponse3.properties.comparables.comp["1"].lotSizeSqFt["#text"];
+            currentProperty.comp2Zestimate = subresponse3.properties.comparables.comp["1"].zestimate.amount["#text"];
+            currentProperty.comp2Zpid = subresponse3.properties.comparables.comp["1"].zpid["#text"];
 
-            propertyInfo.comp3Score = subresponse3.properties.comparables.comp["2"]["@attributes"].score;
-            console.log("Comp3 Score: " + propertyInfo.comp3Score);
-            propertyInfo.comp3HeatedSqFt = subresponse3.properties.comparables.comp["2"].finishedSqFt["#text"];
-            console.log("Comp3 Heated SqFt: " + propertyInfo.comp3HeatedSqFt);
-            propertyInfo.comp3LastSoldPrice = subresponse3.properties.comparables.comp["2"].lastSoldPrice["#text"];
-            console.log("Comp3 Last Sold Price: " + propertyInfo.comp3LastSoldPrice);
-            propertyInfo.comp3LastSoldDate = subresponse3.properties.comparables.comp["2"].lastSoldDate["#text"];
-            console.log("Comp3 Last Sold Date: " + propertyInfo.comp3LastSoldDate);
-            propertyInfo.comp3LotSize = subresponse3.properties.comparables.comp["2"].lotSizeSqFt["#text"];
-            console.log("Comp3 Lot Size: " + propertyInfo.comp3LotSize);
-            propertyInfo.comp3Zestimate = subresponse3.properties.comparables.comp["2"].zestimate.amount["#text"];
-            console.log("Comp3 Zestimate: " + propertyInfo.comp3Zestimate);
-            propertyInfo.comp3Zpid = subresponse3.properties.comparables.comp["2"].zpid["#text"];
-            console.log("Comp3 Zpid: " + propertyInfo.comp3Zpid);
+            currentProperty.comp3Score = subresponse3.properties.comparables.comp["2"]["@attributes"].score;
+            currentProperty.comp3HeatedSqFt = subresponse3.properties.comparables.comp["2"].finishedSqFt["#text"];
+            currentProperty.comp3LastSoldPrice = subresponse3.properties.comparables.comp["2"].lastSoldPrice["#text"];
+            currentProperty.comp3LastSoldDate = subresponse3.properties.comparables.comp["2"].lastSoldDate["#text"];
+            currentProperty.comp3LotSize = subresponse3.properties.comparables.comp["2"].lotSizeSqFt["#text"];
+            currentProperty.comp3Zestimate = subresponse3.properties.comparables.comp["2"].zestimate.amount["#text"];
+            currentProperty.comp3Zpid = subresponse3.properties.comparables.comp["2"].zpid["#text"];
 
-            propertyInfo.comp4Score = subresponse3.properties.comparables.comp["3"]["@attributes"].score;
-            console.log("Comp4 Score: " + propertyInfo.comp4Score);
-            propertyInfo.comp4HeatedSqFt = subresponse3.properties.comparables.comp["3"].finishedSqFt["#text"];
-            console.log("Comp4 Heated SqFt: " + propertyInfo.comp4HeatedSqFt);
-            propertyInfo.comp4LastSoldPrice = subresponse3.properties.comparables.comp["3"].lastSoldPrice["#text"];
-            console.log("Comp4 Last Sold Price: " + propertyInfo.comp4LastSoldPrice);
-            propertyInfo.comp4LastSoldDate = subresponse3.properties.comparables.comp["3"].lastSoldDate["#text"];
-            console.log("Comp4 Last Sold Date: " + propertyInfo.comp4LastSoldDate);
-            propertyInfo.comp4LotSize = subresponse3.properties.comparables.comp["3"].lotSizeSqFt["#text"];
-            console.log("Comp4 Lot Size: " + propertyInfo.comp4LotSize);
-            propertyInfo.comp4Zestimate = subresponse3.properties.comparables.comp["3"].zestimate.amount["#text"];
-            console.log("Comp4 Zestimate: " + propertyInfo.comp4Zestimate);
-            propertyInfo.comp4Zpid = subresponse3.properties.comparables.comp["3"].zpid["#text"];
-            console.log("Comp4 Zpid: " + propertyInfo.comp4Zpid);
+            currentProperty.comp4Score = subresponse3.properties.comparables.comp["3"]["@attributes"].score;
+            currentProperty.comp4HeatedSqFt = subresponse3.properties.comparables.comp["3"].finishedSqFt["#text"];
+            currentProperty.comp4LastSoldPrice = subresponse3.properties.comparables.comp["3"].lastSoldPrice["#text"];
+            currentProperty.comp4LastSoldDate = subresponse3.properties.comparables.comp["3"].lastSoldDate["#text"];
+            currentProperty.comp4LotSize = subresponse3.properties.comparables.comp["3"].lotSizeSqFt["#text"];
+            currentProperty.comp4Zestimate = subresponse3.properties.comparables.comp["3"].zestimate.amount["#text"];
+            currentProperty.comp4Zpid = subresponse3.properties.comparables.comp["3"].zpid["#text"];
 
-            propertyInfo.comp5Score = subresponse3.properties.comparables.comp["4"]["@attributes"].score;
-            console.log("Comp5 Score: " + propertyInfo.comp5Score);
-            propertyInfo.comp5HeatedSqFt = subresponse3.properties.comparables.comp["4"].finishedSqFt["#text"];
-            console.log("Comp5 Heated SqFt: " + propertyInfo.comp5HeatedSqFt);
-            propertyInfo.comp5LastSoldPrice = subresponse3.properties.comparables.comp["4"].lastSoldPrice["#text"];
-            console.log("Comp5 Last Sold Price: " + propertyInfo.comp5LastSoldPrice);
-            propertyInfo.comp5LastSoldDate = subresponse3.properties.comparables.comp["4"].lastSoldDate["#text"];
-            console.log("Comp5 Last Sold Date: " + propertyInfo.comp5LastSoldDate);
-            propertyInfo.comp5LotSize = subresponse3.properties.comparables.comp["4"].lotSizeSqFt["#text"];
-            console.log("Comp5 Lot Size: " + propertyInfo.comp5LotSize);
-            propertyInfo.comp5Zestimate = subresponse3.properties.comparables.comp["4"].zestimate.amount["#text"];
-            console.log("Comp5 Zestimate: " + propertyInfo.comp5Zestimate);
-            propertyInfo.comp5Zpid = subresponse3.properties.comparables.comp["4"].zpid["#text"];
-            console.log("Comp5 Zpid: " + propertyInfo.comp5Zpid);
-            console.log("-------------------------------------");
+            currentProperty.comp5Score = subresponse3.properties.comparables.comp["4"]["@attributes"].score;
+            currentProperty.comp5HeatedSqFt = subresponse3.properties.comparables.comp["4"].finishedSqFt["#text"];
+            currentProperty.comp5LastSoldPrice = subresponse3.properties.comparables.comp["4"].lastSoldPrice["#text"];
+            currentProperty.comp5LastSoldDate = subresponse3.properties.comparables.comp["4"].lastSoldDate["#text"];
+            currentProperty.comp5LotSize = subresponse3.properties.comparables.comp["4"].lotSizeSqFt["#text"];
+            currentProperty.comp5Zestimate = subresponse3.properties.comparables.comp["4"].zestimate.amount["#text"];
+            currentProperty.comp5Zpid = subresponse3.properties.comparables.comp["4"].zpid["#text"];
+            // console.log("Deep Comp Search " + deepCompErrorText + " - Error Code: " + deepCompErrorCode);
+            // console.log("------------ Deep Comps ------------");
+            // console.log("Comp1 Score: " + currentProperty.comp1Score);
+            // console.log("Comp1 Heated SqFt: " + currentProperty.comp1HeatedSqFt);
+            // console.log("Comp1 Last Sold Price: " + currentProperty.comp1LastSoldPrice);
+            // console.log("Comp1 Last Sold Date: " + currentProperty.comp1LastSoldDate);
+            // console.log("Comp1 Lot Size: " + currentProperty.comp1LotSize);
+            // console.log("Comp1 Zestimate: " + currentProperty.comp1Zestimate);
+            // console.log("Comp1 Zpid: " + currentProperty.comp1Zpid);
+            // console.log("Comp2 Score: " + currentProperty.comp2Score);
+            // console.log("Comp2 Heated SqFt: " + currentProperty.comp2HeatedSqFt);
+            // console.log("Comp2 Last Sold Price: " + currentProperty.comp2LastSoldPrice);
+            // console.log("Comp2 Last Sold Date: " + currentProperty.comp2LastSoldDate);
+            // console.log("Comp2 Lot Size: " + currentProperty.comp2LotSize);
+            // console.log("Comp2 Zestimate: " + currentProperty.comp2Zestimate);
+            // console.log("Comp2 Zpid: " + currentProperty.comp2Zpid);
+            // console.log("Comp3 Score: " + currentProperty.comp3Score);
+            // console.log("Comp3 Heated SqFt: " + currentProperty.comp3HeatedSqFt);
+            // console.log("Comp3 Last Sold Price: " + currentProperty.comp3LastSoldPrice);
+            // console.log("Comp3 Last Sold Date: " + currentProperty.comp3LastSoldDate);
+            // console.log("Comp3 Lot Size: " + currentProperty.comp3LotSize);
+            // console.log("Comp3 Zestimate: " + currentProperty.comp3Zestimate);
+            // console.log("Comp3 Zpid: " + currentProperty.comp3Zpid);
+            // console.log("Comp4 Score: " + currentProperty.comp4Score);
+            // console.log("Comp4 Heated SqFt: " + currentProperty.comp4HeatedSqFt);
+            // console.log("Comp4 Last Sold Price: " + currentProperty.comp4LastSoldPrice);
+            // console.log("Comp4 Last Sold Date: " + currentProperty.comp4LastSoldDate);
+            // console.log("Comp4 Lot Size: " + currentProperty.comp4LotSize);
+            // console.log("Comp4 Zestimate: " + currentProperty.comp4Zestimate);
+            // console.log("Comp4 Zpid: " + currentProperty.comp4Zpid);
+            // console.log("Comp5 Score: " + currentProperty.comp5Score);
+            // console.log("Comp5 Heated SqFt: " + currentProperty.comp5HeatedSqFt);
+            // console.log("Comp5 Last Sold Price: " + currentProperty.comp5LastSoldPrice);
+            // console.log("Comp5 Last Sold Date: " + currentProperty.comp5LastSoldDate);
+            // console.log("Comp5 Lot Size: " + currentProperty.comp5LotSize);
+            // console.log("Comp5 Zestimate: " + currentProperty.comp5Zestimate);
+            // console.log("Comp5 Zpid: " + currentProperty.comp5Zpid);
+            // console.log("-------------------------------------");
 
         });
     }).then(function() {
@@ -674,21 +733,29 @@ function zillowInfo() {
             var jsonresp4 = xmlToJson(response);
             //console.log(jsonresp4); // Whole Json object
             var obj4 = jsonresp4;
-            console.log("------ Updated Property Details -----");
-            console.log("--Details available only if the property has been listed recently --");
-            console.log(obj4[Object.keys(obj4)[0]]);
+            // console.log("------ Updated Property Details -----");
+            // console.log("--Details available only if the property has been listed recently --");
+            // console.log(obj4[Object.keys(obj4)[0]]);
             var responseObj4message = obj4[Object.keys(obj4)[0]].message.code["#text"];
             if (responseObj4message === 0) {
-                subresponse4 = responseObj4.request;
+                subRecentHistory = responseObj4.request;
                 //console.log("------ Updated Property Details -----");
                 //console.log("--Details available if hous has been listed recently --");
-                console.log(subresponse4);
-                console.log("-------------------------------------");
+                // console.log(subRecentHistory);
+                // console.log("-------------------------------------");
             } else {
-                console.log("Error: no updated data is available for this property");
-                subresponse4IsValid = false
+                console.log("Error: no recent market history data is available for this property");
+                subRecentHistoryIsValid = false
             }
         });
+        // **********************************************
+        // push the currentProperty into the propertyArry!!
+        // **********************************************
+        propertyArry[currentProperty.googlePlaceID] = currentProperty;
+        // now that we have all of the data, populate the tables
+        propertyInfoTable(currentProperty.googlePlaceID);
+        console.log("After Zillow. googleID=" + currentProperty.googlePlaceID);
+        console.log(propertyArry[currentProperty.googlePlaceID]);
     });
 };
 
