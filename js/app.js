@@ -538,7 +538,7 @@ function zillowInfo() {
 
     }).then(function() {
 
-        var queryURL = "http://www.zillow.com/webservice/GetChart.htm?zws-id=X1-ZWz1fm57445z4b_1sm5d&unit-type=percent&zpid=" + zpid + "&width=300&height=150";
+        var queryURL = "https://www.zillow.com/webservice/GetChart.htm?zws-id=X1-ZWz1fm57445z4b_1sm5d&unit-type=percent&zpid=" + zpid + "&width=300&height=150";
 
         $.ajax({
             url: queryURL,
@@ -564,7 +564,7 @@ function zillowInfo() {
         });
     }).then(function() {
 
-        var queryURL = "http://www.zillow.com/webservice/GetDeepComps.htm?zws-id=X1-ZWz1fm57445z4b_1sm5d&zpid=" + zpid + "&count=5";
+        var queryURL = "https://www.zillow.com/webservice/GetDeepComps.htm?zws-id=X1-ZWz1fm57445z4b_1sm5d&zpid=" + zpid + "&count=5";
 
         $.ajax({
             url: queryURL,
@@ -663,7 +663,7 @@ function zillowInfo() {
         });
     }).then(function() {
 
-        var queryURL = "http://www.zillow.com/webservice/GetUpdatedPropertyDetails.htm?zws-id=X1-ZWz1fm57445z4b_1sm5d&zpid=" + zpid;
+        var queryURL = "https://www.zillow.com/webservice/GetUpdatedPropertyDetails.htm?zws-id=X1-ZWz1fm57445z4b_1sm5d&zpid=" + zpid;
 
         $.ajax({
             url: queryURL,
