@@ -44,7 +44,6 @@ $(document).ready(function() {
 
     initPage();
 
-
     $("#getProperty").click(function(event) {
         event.preventDefault();
         $('.results').show();
@@ -99,13 +98,13 @@ $(document).ready(function() {
 
     $("body").on("click touch", ".prop-info", function() {
 
-        console.log("propAry:");
-        console.log(propertyArry);
-        console.log("this.id:");
-        console.log($(this).attr("id"));
-        console.log("this.location:");
-        console.log(propertyArry[$(this).attr("id")].googlePlaceLocation);
-        createStreetMap(propertyArry[$(this).attr("id")].googlePlaceLocation);
+        // console.log("propAry:");
+        // console.log(propertyArry);
+        // console.log("this.id:");
+        // console.log($(this).attr("id"));
+        // console.log("this.location:");
+        // console.log(propertyArry[$(this).attr("id")].googlePlaceLocation);
+        createStreetMap($(this).attr("id"));
 
     });
 
@@ -230,7 +229,38 @@ function getBuildingInfo() {
             console.log('error: ' + errorThrown);
         });
 }
-//------------------------------------------------------------------------//
+
+function getAppraisalInfo() {
+    var queryURL = "http://maps.co.mecklenburg.nc.us/rest/v3/ws_cama_appraisal.php?pid=" + currentProperty.PID;
+
+    $.ajax({
+            url: queryURL,
+            method: "GET"
+        })
+        .done(function(response) {
+            console.log("getAppraisalInfo: ");
+            console.log(response);
+            // push any data to the page
+            // available fields:
+
+            // "tax_year": "2011",
+            // "building_value": "87400",
+            // "extra_features_value": "11900",
+            // "land_value": "19400",
+            // "total_value": "118700.00000"
+            currentProperty.year_assessed = response[0].tax_year;
+            currentProperty.tax_value = response[0].total_value.slice(0, -3);
+            // now we (hopefully) have all of the data, add it to the array
+            // using its google maps place ID as the array key
+            propertyArry[currentProperty.googlePlaceID] = currentProperty;
+            propertyInfoTable(currentProperty.googlePlaceID);
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            console.log('jqXHR: ' + jqXHR);
+            console.log('status: ' + textStatus);
+            console.log('error: ' + errorThrown);
+        });
+}
 
 function getGreatSchoolInfo() {
     var queryURL = "http://api.greatschools.org/schools/nearby?key=[vkyg4cq5fpsynnc7fmellgxx]&state=NC&lat=" + lat + "&lon=" + lng;
@@ -253,13 +283,13 @@ function getGreatSchoolInfo() {
             // "total_value": "118700.00000"
             currentProperty.year_assessed = response[0].tax_year;
             currentProperty.tax_value = response[0].total_value.slice(0, -3);
-            // now we (hopefully) have all of the data, add it to the array
+            // now we (hopefully) have all of the data, push it onto the array
             // using its google maps place ID as the array key
             propertyArry[currentProperty.googlePlaceID] = currentProperty;
+            // fill out the tables
             propertyInfoTable(currentProperty.googlePlaceID);
 
             // clear out the inputs for the user
-
             $("#street-name").val("");
             $("#city").val("");
             $("#zip-code").val("");
@@ -276,56 +306,41 @@ function getGreatSchoolInfo() {
 }
 
 function propertyInfoTable(googleID) {
-    var tr = $("<tr>");
-    var td_address = $("<td>");
+
+
+    var trResults = $("<tr>");
+    var td_address1 = $("<td>");
     var td_city = $("<td>");
     var td_neighborhood = $("<td>");
     var td_sqFeet = $("<td>");
-    var td_ppsf = $("<td>");
-    var td_school_ratings = $("<td>");
-    var td_tax_value = $("<td>");
-    var td_estimated_value = $("<td>"); // From Zillow?
     var td_year_built = $("<td>");
     var td_stories = $("<td>");
     var td_bedrooms = $("<td>");
     var td_full_baths = $("<td>");
-    var td_three_quarter_baths = $("<td>");
     var td_half_baths = $("<td>");
 
+    var trProperties = $("<tr>");
+    var td_address2 = $("<td>");
+    var td_estimated_value = $("<td>"); // From Zillow?
+    var td_ppsf = $("<td>");
+    var td_school_ratings = $("<td>");
+    var td_tax_value = $("<td>");
+
+
     // configure the row
-    tr.attr("id", googleID);
-    tr.attr("class", "prop-info");
-    tr.tooltip({
-        tip: "#tipTxt",
-        delay: 0
-    });
 
-// add row to Results Table
-$("#results-list").append(tr);
+    trProperties.attr("id", googleID);
+    trProperties.attr("class", "prop-info");
 
-    td_address.html(propertyArry[googleID].enteredAddress);
-    td_city.html(propertyArry[googleID].city);
-    td_neighborhood.html(propertyArry[googleID].neighborhood);
-    td_sqFeet.html(propertyArry[googleID].sqFeet);
-    td_year_built.html(propertyArry[googleID].year_built);
-    td_stories.html(propertyArry[googleID].stories);
-    td_bedrooms.html(propertyArry[googleID].bedrooms);
-    td_full_baths.html(propertyArry[googleID].full_baths);
 
-    td_address.appendTo(tr);
-    td_city.appendTo(tr);
-    td_neighborhood.appendTo(tr);
-    td_sqFeet.appendTo(tr);
-    td_year_built.appendTo(tr);
-    td_stories.appendTo(tr);
-    td_bedrooms.appendTo(tr);
-    td_full_baths.appendTo(tr);
+    // add the row to the tables
+    $("#results-list").append(trResults);
+    $("#properties-list").append(trProperties);
 
-    // add the row to the Decision Data table
-    $("#properties-list").append(tr);
 
     // configure the table details
-    td_address.html(propertyArry[googleID].enteredAddress);
+    td_address1.html(propertyArry[googleID].enteredAddress);
+    td_address2.html(propertyArry[googleID].enteredAddress);
     td_city.html(propertyArry[googleID].city);
     td_neighborhood.html(propertyArry[googleID].neighborhood);
     td_sqFeet.html(propertyArry[googleID].sqFeet);
@@ -337,26 +352,29 @@ $("#results-list").append(tr);
     td_stories.html(propertyArry[googleID].stories);
     td_bedrooms.html(propertyArry[googleID].bedrooms);
     td_full_baths.html(propertyArry[googleID].full_baths);
-    td_three_quarter_baths.html(propertyArry[googleID].three_quarter_baths);
     td_half_baths.html(propertyArry[googleID].half_baths);
 
-    // append INSDIE the table row
-    td_address.appendTo(tr);
-    td_city.appendTo(tr);
-    td_neighborhood.appendTo(tr);
-    td_sqFeet.appendTo(tr);
-    td_ppsf.appendTo(tr);
-    td_school_ratings.appendTo(tr);
-    td_tax_value.appendTo(tr);
-    td_estimated_value.appendTo(tr);
-    td_year_built.appendTo(tr);
-    td_stories.appendTo(tr);
-    td_bedrooms.appendTo(tr);
-    td_full_baths.appendTo(tr);
-    td_three_quarter_baths.appendTo(tr);
-    td_half_baths.appendTo(tr);
 
-    createStreetMap(propertyArry[googleID].googlePlaceLocation);
+    // append INSDIE the Results table row
+    td_address1.appendTo(trResults);
+    td_city.appendTo(trResults);
+    td_neighborhood.appendTo(trResults);
+    td_sqFeet.appendTo(trResults);
+    td_year_built.appendTo(trResults);
+    td_stories.appendTo(trResults);
+    td_bedrooms.appendTo(trResults);
+    td_full_baths.appendTo(trResults);
+    td_half_baths.appendTo(trResults);
+
+    // append INSDIE the Properties table row
+    td_address2.appendTo(trProperties);
+    td_estimated_value.appendTo(trProperties);
+    td_ppsf.appendTo(trProperties);
+    td_school_ratings.appendTo(trProperties);
+    td_tax_value.appendTo(trProperties);
+
+
+    createStreetMap(googleID);
 }
 
 
@@ -375,7 +393,8 @@ $("#results-list").append(tr);
 //             enableCloseButton: false
 //         });
 // }
-function createStreetMap(location) {
+function createStreetMap(googleID) {
+r
     var panorama;
     var map;
 
@@ -383,7 +402,8 @@ function createStreetMap(location) {
     var sv = new google.maps.StreetViewService();
 
 
-    sv.getPanoramaByLocation(location, 50, function(data, status) {
+
+    sv.getPanoramaByLocation(propertyArry[googleID].googlePlaceLocation, 50, function(data, status) {
         if (status == 'OK') {
             //google has a streetview image for this location, so attach it to the streetview div
             var panoramaOptions = {
@@ -396,9 +416,10 @@ function createStreetMap(location) {
             };
 
             var mapOptions = {
-                center: { lat: currentProperty.lat, lng: currentProperty.lng },
+
+                center: propertyArry[googleID].googlePlaceLocation,
                 zoom: 8,
-                scrollwheel: false,
+                scrollwheel: true,
                 zoom: 14
             };
 
@@ -406,8 +427,9 @@ function createStreetMap(location) {
             var map = new google.maps.Map(document.getElementById('map-view'), mapOptions);
             var marker = new google.maps.Marker({
                 map: map,
-                position: { lat: currentProperty.lat, lng: currentProperty.lng },
-                title: 'Target!'
+                position: propertyArry[googleID].googlePlaceLocation,
+                title: propertyArry[googleID].fullAddress
+
             });
         } else {
             //no google streetview image for this location, so hide the streetview div
@@ -435,6 +457,7 @@ var subresponse4 = {};
 var subresponse4IsValid = true;
 var zpid;
 $("#button").on("click", function() {
+
 
     var queryURL = "https://www.zillow.com/webservice/GetDeepSearchResults.htm?zws-id=X1-ZWz1fm57445z4b_1sm5d&rentzestimate=true&address=" + propertyAddress + "&citystatezip=" + propertyCity + "%2C+" + propertyState;
 
@@ -546,6 +569,7 @@ $("#button").on("click", function() {
                 // dataType: "jsonp"
         }).done(function(response) {
             //console.log(response);  // raw object
+
             var jsonresp3 = xmlToJson(response);
             //console.log(jsonresp3); // Whole Json object
             var obj3 = jsonresp3;
@@ -668,6 +692,7 @@ $("#button").on("click", function() {
         // Create the return object
         var obj = {};
 
+
         if (xml.nodeType == 1) { // element
             // do attributes
             if (xml.attributes.length > 0) {
@@ -701,12 +726,15 @@ $("#button").on("click", function() {
         return obj;
     };
 
+
 });
 
 
 
 
+});
 
 
 
 // ********************************** Houssein's Code END******************************
+
