@@ -116,267 +116,267 @@ $(document).ready(function() {
     // reSize();
 });
 
-function getPID() {
-    var formattedAddress = currentProperty.enteredAddress.toLowerCase();
+// function getPID() {
+//     var formattedAddress = currentProperty.enteredAddress.toLowerCase();
 
-    var queryURL = "http://maps.co.mecklenburg.nc.us/api/search/v1/" + formattedAddress + "?tables=address&limit=1"
-    queryURL = encodeURI(queryURL);
-    // console.log("maps.co.mecklenburg URL: " + queryURL);
+//     var queryURL = "http://maps.co.mecklenburg.nc.us/api/search/v1/" + formattedAddress + "?tables=address&limit=1"
+//     queryURL = encodeURI(queryURL);
+//     // console.log("maps.co.mecklenburg URL: " + queryURL);
 
-    $.ajax({
-            url: queryURL,
-            method: "GET"
-        })
-        .done(function(response) {
-            // console.log("getPID: ");
-            // console.log(response);
-            // add the lat and long to the global
-            currentProperty.PID = response[0].pid;
-            currentProperty.ID = response[0].id;
-            getPropertyUse();
-        })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-            console.log('jqXHR: ' + jqXHR);
-            console.log('status: ' + textStatus);
-            console.log('error: ' + errorThrown);
-        });
-}
+//     $.ajax({
+//             url: queryURL,
+//             method: "GET"
+//         })
+//         .done(function(response) {
+//             // console.log("getPID: ");
+//             // console.log(response);
+//             // add the lat and long to the global
+//             currentProperty.PID = response[0].pid;
+//             currentProperty.ID = response[0].id;
+//             getPropertyUse();
+//         })
+//         .fail(function(jqXHR, textStatus, errorThrown) {
+//             console.log('jqXHR: ' + jqXHR);
+//             console.log('status: ' + textStatus);
+//             console.log('error: ' + errorThrown);
+//         });
+// }
 
-function getPropertyUse() {
-    var queryURL = "http://maps.co.mecklenburg.nc.us/rest/v3/ws_cama_landuse.php?pid=" + currentProperty.PID;
+// function getPropertyUse() {
+//     var queryURL = "http://maps.co.mecklenburg.nc.us/rest/v3/ws_cama_landuse.php?pid=" + currentProperty.PID;
 
-    $.ajax({
-            url: queryURL,
-            method: "GET"
-        })
-        .done(function(response) {
-            // console.log("getPropertyUse: ");
-            // console.log(response);
-            if ((response[0].land_use != "SINGLE FAMILY RESIDENTIAL") || parseInt((response[0].units) != 1)) {
-                // this is not a private home.  Tell the user, reset the page and exit
-                alert("Sorry this is not a private home.  Please enter a new address.");
-                initPage();
-                return false;
-            } else {
-                // show the panel and fill its header
-                $("#currentHome").html("<h3>" + currentProperty.fullAddress + "</h3>");
-                $("#currentHomePanel").show();
-                // push any data to the page
-                // available fields:
+//     $.ajax({
+//             url: queryURL,
+//             method: "GET"
+//         })
+//         .done(function(response) {
+//             // console.log("getPropertyUse: ");
+//             // console.log(response);
+//             if ((response[0].land_use != "SINGLE FAMILY RESIDENTIAL") || parseInt((response[0].units) != 1)) {
+//                 // this is not a private home.  Tell the user, reset the page and exit
+//                 alert("Sorry this is not a private home.  Please enter a new address.");
+//                 initPage();
+//                 return false;
+//             } else {
+//                 // show the panel and fill its header
+//                 $("#currentHome").html("<h3>" + currentProperty.fullAddress + "</h3>");
+//                 $("#currentHomePanel").show();
+//                 // push any data to the page
+//                 // available fields:
 
-                // "land_use": "SINGLE FAMILY RESIDENTIAL",
-                // "units": "1.00000",
-                // "neighborhood_code": "L118",
-                // "neighborhood": "ALAMANCE",
-                // "land_unit_type": "LT"
-                currentProperty.neighborhood = response[0].neighborhood;
-                getBuildingInfo();
-            }
-        })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-            console.log('jqXHR: ' + jqXHR);
-            console.log('status: ' + textStatus);
-            console.log('error: ' + errorThrown);
-        });
-}
+//                 // "land_use": "SINGLE FAMILY RESIDENTIAL",
+//                 // "units": "1.00000",
+//                 // "neighborhood_code": "L118",
+//                 // "neighborhood": "ALAMANCE",
+//                 // "land_unit_type": "LT"
+//                 currentProperty.neighborhood = response[0].neighborhood;
+//                 getBuildingInfo();
+//             }
+//         })
+//         .fail(function(jqXHR, textStatus, errorThrown) {
+//             console.log('jqXHR: ' + jqXHR);
+//             console.log('status: ' + textStatus);
+//             console.log('error: ' + errorThrown);
+//         });
+// }
 
-function getBuildingInfo() {
-    var queryURL = "http://maps.co.mecklenburg.nc.us/rest/v3/ws_cama_building.php?pid=" + currentProperty.PID;
+// function getBuildingInfo() {
+//     var queryURL = "http://maps.co.mecklenburg.nc.us/rest/v3/ws_cama_building.php?pid=" + currentProperty.PID;
 
-    $.ajax({
-            url: queryURL,
-            method: "GET"
-        })
-        .done(function(response) {
-            // console.log("getBuildingInfo: ");
-            // console.log(response);
-            // push any data to the page
-            // available fields:
+//     $.ajax({
+//             url: queryURL,
+//             method: "GET"
+//         })
+//         .done(function(response) {
+//             // console.log("getBuildingInfo: ");
+//             // console.log(response);
+//             // push any data to the page
+//             // available fields:
 
-            // "parcel_id": "11111111",
-            // "common_parcel_id": "11111111",
-            // "card_number": "1",
-            // "property_use_description": "Single-Fam",
-            // "units": "1",
-            // "year_built": "1970",
-            // "total_square_feet": "1664.00000",
-            // "heated_square_feet": "1664.00000",
-            // "foundation_description": "CRAWL SPACE",
-            // "exterior_wall_description": "FACE BRICK",
-            // "heat_type": "AIR-DUCTED",
-            // "ac_type": "AC-CENTRAL",
-            // "stories": "1 STORY",
-            // "bedrooms": "3",
-            // "full_baths": "2",
-            // "three_quarter_baths": "0",
-            // "half_baths": "0",
-            // "building_type": "RES",
-            // "building_value": "87400"
-            var sqft = response[0].heated_square_feet.split(".");
-            currentProperty.sqFeet = sqft[0];
-            currentProperty.year_built = response[0].year_built;
-            currentProperty.stories = response[0].stories;
-            currentProperty.bedrooms = response[0].bedrooms;
-            currentProperty.full_baths = response[0].full_baths;
-            currentProperty.three_quarter_baths = response[0].three_quarter_baths;
-            currentProperty.half_baths = response[0].half_baths;
+//             // "parcel_id": "11111111",
+//             // "common_parcel_id": "11111111",
+//             // "card_number": "1",
+//             // "property_use_description": "Single-Fam",
+//             // "units": "1",
+//             // "year_built": "1970",
+//             // "total_square_feet": "1664.00000",
+//             // "heated_square_feet": "1664.00000",
+//             // "foundation_description": "CRAWL SPACE",
+//             // "exterior_wall_description": "FACE BRICK",
+//             // "heat_type": "AIR-DUCTED",
+//             // "ac_type": "AC-CENTRAL",
+//             // "stories": "1 STORY",
+//             // "bedrooms": "3",
+//             // "full_baths": "2",
+//             // "three_quarter_baths": "0",
+//             // "half_baths": "0",
+//             // "building_type": "RES",
+//             // "building_value": "87400"
+//             var sqft = response[0].heated_square_feet.split(".");
+//             currentProperty.sqFeet = sqft[0];
+//             currentProperty.year_built = response[0].year_built;
+//             currentProperty.stories = response[0].stories;
+//             currentProperty.bedrooms = response[0].bedrooms;
+//             currentProperty.full_baths = response[0].full_baths;
+//             currentProperty.three_quarter_baths = response[0].three_quarter_baths;
+//             currentProperty.half_baths = response[0].half_baths;
 
-            getAppraisalInfo();
+//             getAppraisalInfo();
 
-        })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-            console.log('jqXHR: ' + jqXHR);
-            console.log('status: ' + textStatus);
-            console.log('error: ' + errorThrown);
-        });
-}
+//         })
+//         .fail(function(jqXHR, textStatus, errorThrown) {
+//             console.log('jqXHR: ' + jqXHR);
+//             console.log('status: ' + textStatus);
+//             console.log('error: ' + errorThrown);
+//         });
+// }
 
-function getAppraisalInfo() {
-    var queryURL = "http://maps.co.mecklenburg.nc.us/rest/v3/ws_cama_appraisal.php?pid=" + currentProperty.PID;
+// function getAppraisalInfo() {
+//     var queryURL = "http://maps.co.mecklenburg.nc.us/rest/v3/ws_cama_appraisal.php?pid=" + currentProperty.PID;
 
-    $.ajax({
-            url: queryURL,
-            method: "GET"
-        })
-        .done(function(response) {
-            console.log("getAppraisalInfo: ");
-            console.log(response);
-            // push any data to the page
-            // available fields:
+//     $.ajax({
+//             url: queryURL,
+//             method: "GET"
+//         })
+//         .done(function(response) {
+//             console.log("getAppraisalInfo: ");
+//             console.log(response);
+//             // push any data to the page
+//             // available fields:
 
-            // "tax_year": "2011",
-            // "building_value": "87400",
-            // "extra_features_value": "11900",
-            // "land_value": "19400",
-            // "total_value": "118700.00000"
-            currentProperty.year_assessed = response[0].tax_year;
-            currentProperty.tax_value = response[0].total_value.slice(0, -3);
-            // now we (hopefully) have all of the data, add it to the array
-            // using its google maps place ID as the array key
-            propertyArry[currentProperty.googlePlaceID] = currentProperty;
-            propertyInfoTable(currentProperty.googlePlaceID);
-        })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-            console.log('jqXHR: ' + jqXHR);
-            console.log('status: ' + textStatus);
-            console.log('error: ' + errorThrown);
-        });
-}
+//             // "tax_year": "2011",
+//             // "building_value": "87400",
+//             // "extra_features_value": "11900",
+//             // "land_value": "19400",
+//             // "total_value": "118700.00000"
+//             currentProperty.year_assessed = response[0].tax_year;
+//             currentProperty.tax_value = response[0].total_value.slice(0, -3);
+//             // now we (hopefully) have all of the data, add it to the array
+//             // using its google maps place ID as the array key
+//             propertyArry[currentProperty.googlePlaceID] = currentProperty;
+//             propertyInfoTable(currentProperty.googlePlaceID);
+//         })
+//         .fail(function(jqXHR, textStatus, errorThrown) {
+//             console.log('jqXHR: ' + jqXHR);
+//             console.log('status: ' + textStatus);
+//             console.log('error: ' + errorThrown);
+//         });
+// }
 
-function getGreatSchoolInfo() {
-    var queryURL = "http://api.greatschools.org/schools/nearby?key=[vkyg4cq5fpsynnc7fmellgxx]&state=NC&lat=" + lat + "&lon=" + lng;
+// function getGreatSchoolInfo() {
+//     var queryURL = "http://api.greatschools.org/schools/nearby?key=[vkyg4cq5fpsynnc7fmellgxx]&state=NC&lat=" + lat + "&lon=" + lng;
 
-    $.ajax({
-            url: queryURL,
-            method: "GET"
-        })
-        .done(function(response) {
+//     $.ajax({
+//             url: queryURL,
+//             method: "GET"
+//         })
+//         .done(function(response) {
 
-            // console.log("getAppraisalInfo: ");
-            // console.log(response);
-            // push any data to the page
-            // available fields:
+//             // console.log("getAppraisalInfo: ");
+//             // console.log(response);
+//             // push any data to the page
+//             // available fields:
 
-            // "tax_year": "2011",
-            // "building_value": "87400",
-            // "extra_features_value": "11900",
-            // "land_value": "19400",
-            // "total_value": "118700.00000"
-            currentProperty.year_assessed = response[0].tax_year;
-            currentProperty.tax_value = response[0].total_value.slice(0, -3);
-            // now we (hopefully) have all of the data, push it onto the array
-            // using its google maps place ID as the array key
-            propertyArry[currentProperty.googlePlaceID] = currentProperty;
-            // fill out the tables
-            propertyInfoTable(currentProperty.googlePlaceID);
+//             // "tax_year": "2011",
+//             // "building_value": "87400",
+//             // "extra_features_value": "11900",
+//             // "land_value": "19400",
+//             // "total_value": "118700.00000"
+//             currentProperty.year_assessed = response[0].tax_year;
+//             currentProperty.tax_value = response[0].total_value.slice(0, -3);
+//             // now we (hopefully) have all of the data, push it onto the array
+//             // using its google maps place ID as the array key
+//             propertyArry[currentProperty.googlePlaceID] = currentProperty;
+//             // fill out the tables
+//             propertyInfoTable(currentProperty.googlePlaceID);
 
-            // clear out the inputs for the user
-            $("#street-name").val("");
-            $("#city").val("");
-            $("#zip-code").val("");
-            $("#street-name").val("");
-            // TODO Validate these inputs
-            $("#city").val("");
+//             // clear out the inputs for the user
+//             $("#street-name").val("");
+//             $("#city").val("");
+//             $("#zip-code").val("");
+//             $("#street-name").val("");
+//             // TODO Validate these inputs
+//             $("#city").val("");
 
-        })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-            console.log('jqXHR: ' + jqXHR);
-            console.log('status: ' + textStatus);
-            console.log('error: ' + errorThrown);
-        });
-}
+//         })
+//         .fail(function(jqXHR, textStatus, errorThrown) {
+//             console.log('jqXHR: ' + jqXHR);
+//             console.log('status: ' + textStatus);
+//             console.log('error: ' + errorThrown);
+//         });
+// }
 
-function propertyInfoTable(googleID) {
-
-
-    var trResults = $("<tr>");
-    var td_address1 = $("<td>");
-    var td_city = $("<td>");
-    var td_neighborhood = $("<td>");
-    var td_sqFeet = $("<td>");
-    var td_year_built = $("<td>");
-    var td_stories = $("<td>");
-    var td_bedrooms = $("<td>");
-    var td_full_baths = $("<td>");
-    var td_half_baths = $("<td>");
-
-    var trProperties = $("<tr>");
-    var td_address2 = $("<td>");
-    var td_estimated_value = $("<td>"); // From Zillow?
-    var td_ppsf = $("<td>");
-    var td_school_ratings = $("<td>");
-    var td_tax_value = $("<td>");
+// function propertyInfoTable(googleID) {
 
 
-    // configure the row
+//     var trResults = $("<tr>");
+//     var td_address1 = $("<td>");
+//     var td_city = $("<td>");
+//     var td_neighborhood = $("<td>");
+//     var td_sqFeet = $("<td>");
+//     var td_year_built = $("<td>");
+//     var td_stories = $("<td>");
+//     var td_bedrooms = $("<td>");
+//     var td_full_baths = $("<td>");
+//     var td_half_baths = $("<td>");
 
-    trProperties.attr("id", googleID);
-    trProperties.attr("class", "prop-info");
-
-
-    // add the row to the tables
-    $("#results-list").append(trResults);
-    $("#properties-list").append(trProperties);
-
-
-    // configure the table details
-    td_address1.html(propertyArry[googleID].enteredAddress);
-    td_address2.html(propertyArry[googleID].enteredAddress);
-    td_city.html(propertyArry[googleID].city);
-    td_neighborhood.html(propertyArry[googleID].neighborhood);
-    td_sqFeet.html(propertyArry[googleID].sqFeet);
-    td_ppsf.html("$" + propertyArry[googleID].total_value / propertyArry[googleID].sqFeet);
-    td_school_ratings.html(propertyArry[googleID].td_school_ratings);
-    td_tax_value.html("$" + parseInt(propertyArry[googleID].tax_value).toLocaleString() + " (" + propertyArry[googleID].year_assessed + ")");
-    td_estimated_value.html("$" + propertyArry[googleID].total_value);
-    td_year_built.html(propertyArry[googleID].year_built);
-    td_stories.html(propertyArry[googleID].stories);
-    td_bedrooms.html(propertyArry[googleID].bedrooms);
-    td_full_baths.html(propertyArry[googleID].full_baths);
-    td_half_baths.html(propertyArry[googleID].half_baths);
+//     var trProperties = $("<tr>");
+//     var td_address2 = $("<td>");
+//     var td_estimated_value = $("<td>"); // From Zillow?
+//     var td_ppsf = $("<td>");
+//     var td_school_ratings = $("<td>");
+//     var td_tax_value = $("<td>");
 
 
-    // append INSDIE the Results table row
-    td_address1.appendTo(trResults);
-    td_city.appendTo(trResults);
-    td_neighborhood.appendTo(trResults);
-    td_sqFeet.appendTo(trResults);
-    td_year_built.appendTo(trResults);
-    td_stories.appendTo(trResults);
-    td_bedrooms.appendTo(trResults);
-    td_full_baths.appendTo(trResults);
-    td_half_baths.appendTo(trResults);
+//     // configure the row
 
-    // append INSDIE the Properties table row
-    td_address2.appendTo(trProperties);
-    td_estimated_value.appendTo(trProperties);
-    td_ppsf.appendTo(trProperties);
-    td_school_ratings.appendTo(trProperties);
-    td_tax_value.appendTo(trProperties);
+//     trProperties.attr("id", googleID);
+//     trProperties.attr("class", "prop-info");
 
 
-    createStreetMap(googleID);
-}
+//     // add the row to the tables
+//     $("#results-list").append(trResults);
+//     $("#properties-list").append(trProperties);
+
+
+//     // configure the table details
+//     td_address1.html(propertyArry[googleID].enteredAddress);
+//     td_address2.html(propertyArry[googleID].enteredAddress);
+//     td_city.html(propertyArry[googleID].city);
+//     td_neighborhood.html(propertyArry[googleID].neighborhood);
+//     td_sqFeet.html(propertyArry[googleID].sqFeet);
+//     td_ppsf.html("$" + propertyArry[googleID].total_value / propertyArry[googleID].sqFeet);
+//     td_school_ratings.html(propertyArry[googleID].td_school_ratings);
+//     td_tax_value.html("$" + parseInt(propertyArry[googleID].tax_value).toLocaleString() + " (" + propertyArry[googleID].year_assessed + ")");
+//     td_estimated_value.html("$" + propertyArry[googleID].total_value);
+//     td_year_built.html(propertyArry[googleID].year_built);
+//     td_stories.html(propertyArry[googleID].stories);
+//     td_bedrooms.html(propertyArry[googleID].bedrooms);
+//     td_full_baths.html(propertyArry[googleID].full_baths);
+//     td_half_baths.html(propertyArry[googleID].half_baths);
+
+
+//     // append INSDIE the Results table row
+//     td_address1.appendTo(trResults);
+//     td_city.appendTo(trResults);
+//     td_neighborhood.appendTo(trResults);
+//     td_sqFeet.appendTo(trResults);
+//     td_year_built.appendTo(trResults);
+//     td_stories.appendTo(trResults);
+//     td_bedrooms.appendTo(trResults);
+//     td_full_baths.appendTo(trResults);
+//     td_half_baths.appendTo(trResults);
+
+//     // append INSDIE the Properties table row
+//     td_address2.appendTo(trProperties);
+//     td_estimated_value.appendTo(trProperties);
+//     td_ppsf.appendTo(trProperties);
+//     td_school_ratings.appendTo(trProperties);
+//     td_tax_value.appendTo(trProperties);
+
+
+//     createStreetMap(googleID);
+// }
 
 
 
