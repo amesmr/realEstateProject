@@ -148,9 +148,11 @@
                             <th>Bedrooms</th>
                             <th>Baths</th>
                             <th>Lot Size</th>
+                            <th>Half Baths</th>
+                            <th>Lot Size</th>
                         </tr>
                     </thead>
-                    <tbody id="results-list">
+                    <tbody class="tooltipped" data-position="top" data-delay="50" data-tooltip="Click to Update Map and Street View" id="results-list">
                     </tbody>
                 </table>
             </div>
@@ -167,6 +169,7 @@
                             <th>Address</th>
                             <th>Estimated Value</th>
                             <th>Price per Square Foot</th>
+                            <th>Tax Value</th>
                             <th>Comparable Properties</th>
                             <th>Trend</th>
                             <th>Rental Estimate</th>
@@ -178,7 +181,9 @@
                     <br>
                     <br>
                     <span class=tooltip id="tipTxt">Click to Update the Map and Street View</span>
-                    <tbody id="properties-list">
+                    
+                    <tbody class="tooltipped" data-position="top" data-delay="50" data-tooltip="Click to Update Map and Street View" id="properties-list">
+
                     </tbody>
                 </table>
             </div>
@@ -187,6 +192,7 @@
                     <!-- insert street view via javascript -->
                 </div>
                 <div id="map-view">
+
                     <!-- insert street map via html -->
                 </div>
                 <!--mortgage calculator-->
