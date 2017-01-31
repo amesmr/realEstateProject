@@ -30,6 +30,12 @@ var vlng = -80.847322;
 
 function initPage() {
     // set up for user
+    $('.results').hide();
+    $('.decisionData').hide();
+    $('#street-view').hide();
+    $('#map-view').hide();
+
+
     $("#currentHomePanel").hide();
 }
 
@@ -37,10 +43,14 @@ function initPage() {
 $(document).ready(function() {
 
     initPage();
+
     $("#getProperty").click(function(event) {
         event.preventDefault();
+        $('.results').show();
+        $('.decisionData').show();
+        $('#street-view').show();
+        $('#map-view').show();
         $('#genInfo').hide();
-        $('#addressInput').hide();
         $('#icons').hide();
         // use google maps to get the lat and long for the address
         // google maps api key AIzaSyBTTpB5r1BNUKiCXbfbbcSfX6M8s867_UY
@@ -318,6 +328,7 @@ function propertyInfoTable(googleID) {
 
 
     // configure the row
+
     trProperties.attr("id", googleID);
     trProperties.attr("class", "prop-info");
 
@@ -325,6 +336,7 @@ function propertyInfoTable(googleID) {
     // add the row to the tables
     $("#results-list").append(trResults);
     $("#properties-list").append(trProperties);
+
 
     // configure the table details
     td_address1.html(propertyArry[googleID].enteredAddress);
@@ -382,11 +394,13 @@ function propertyInfoTable(googleID) {
 //         });
 // }
 function createStreetMap(googleID) {
+r
     var panorama;
     var map;
 
     //once the document is loaded, see if google has a streetview image within 50 meters of the given location, and load that panorama
     var sv = new google.maps.StreetViewService();
+
 
 
     sv.getPanoramaByLocation(propertyArry[googleID].googlePlaceLocation, 50, function(data, status) {
@@ -402,6 +416,7 @@ function createStreetMap(googleID) {
             };
 
             var mapOptions = {
+
                 center: propertyArry[googleID].googlePlaceLocation,
                 zoom: 8,
                 scrollwheel: true,
@@ -414,6 +429,7 @@ function createStreetMap(googleID) {
                 map: map,
                 position: propertyArry[googleID].googlePlaceLocation,
                 title: propertyArry[googleID].fullAddress
+
             });
         } else {
             //no google streetview image for this location, so hide the streetview div
@@ -441,6 +457,7 @@ var subresponse4 = {};
 var subresponse4IsValid = true;
 var zpid;
 $("#button").on("click", function() {
+
 
     var queryURL = "https://www.zillow.com/webservice/GetDeepSearchResults.htm?zws-id=X1-ZWz1fm57445z4b_1sm5d&rentzestimate=true&address=" + propertyAddress + "&citystatezip=" + propertyCity + "%2C+" + propertyState;
 
@@ -552,6 +569,7 @@ $("#button").on("click", function() {
                 // dataType: "jsonp"
         }).done(function(response) {
             //console.log(response);  // raw object
+
             var jsonresp3 = xmlToJson(response);
             //console.log(jsonresp3); // Whole Json object
             var obj3 = jsonresp3;
@@ -674,6 +692,7 @@ $("#button").on("click", function() {
         // Create the return object
         var obj = {};
 
+
         if (xml.nodeType == 1) { // element
             // do attributes
             if (xml.attributes.length > 0) {
@@ -707,7 +726,15 @@ $("#button").on("click", function() {
         return obj;
     };
 
+
 });
 
 
+
+
+});
+
+
+
+// ********************************** Houssein's Code END******************************
 
