@@ -85,6 +85,7 @@ $(document).ready(function() {
                 currentProperty.zip = results[0].address_components[8].long_name;
                 // console.log("currentProperty: ");
                 // console.log(currentProperty);
+                zillowInfo();
                 getPID();
 
             })
@@ -444,9 +445,9 @@ function createStreetMap(googleID) {
 
 // ********************************** Houssein's Code ********************************
 
-var propertyAddress = "12135+Darby+Chase+Dr";
-var propertyCity = "Charlotte";
-var propertyState = "NC";
+// var propertyAddress = "12135+Darby+Chase+Dr";
+// var propertyCity = "Charlotte";
+// var propertyState = "NC";
 
 var propertyInfo = {};
 var subresponse1 = {};
@@ -455,17 +456,19 @@ var subresponse3 = {};
 var subresponse4 = {};
 var subresponse4IsValid = true;
 var zpid;
-$("#button").on("click", function() {
+function zillowInfo() {
 
-
-    var queryURL = "https://www.zillow.com/webservice/GetDeepSearchResults.htm?zws-id=X1-ZWz1fm57445z4b_1sm5d&rentzestimate=true&address=" + propertyAddress + "&citystatezip=" + propertyCity + "%2C+" + propertyState;
+    var queryURL = "https://www.zillow.com/webservice/GetDeepSearchResults.htm?zws-id=X1-ZWz1fm57445z4b_1sm5d&rentzestimate=true&address=" 
+    queryURL+= currentProperty.enteredAddress;
+    queryURL+= "&citystatezip="+currentProperty.city + ",NC";
+    queryURL = queryURL.replace(/ /g, "+");
 
     $.ajax({
         url: queryURL,
         method: "GET"
             // dataType: "jsonp"
     }).done(function(response) {
-        //console.log(response);  
+        console.log(response);  
         //Converting to Json
         var jsonresp1 = xmlToJson(response);
         //console.log(jsonresp1); // Whole Json object
@@ -686,7 +689,7 @@ $("#button").on("click", function() {
             }
         });
     });
-});
+};
 
 function xmlToJson(xml) {
     // Create the return object
@@ -725,12 +728,5 @@ function xmlToJson(xml) {
     }
     return obj;
 };
-
-
-
-
-
-
-
 
 // ********************************** Houssein's Code END******************************
