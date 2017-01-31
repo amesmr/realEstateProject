@@ -43,12 +43,14 @@ h3 {
 }
 h4 { 
 text-align: center; }
-img {
-    border: 1px solid #8a4419;
-    border-style: inset;
+ /*img {
+    border: 1px solid white;
+    border-style: groove;
 }
+*/
 
 
+}
 .details {
     font-size: medium;
     color: blue;
@@ -80,13 +82,6 @@ th {
     text-align: center;
     color: blue;
   }
-
-.tooltip .tooltiptext {
-    width: 120px;
-    top: 100%;
-    left: 50%; 
-    margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
-}
 
 #copyright {
     text-align: center;
