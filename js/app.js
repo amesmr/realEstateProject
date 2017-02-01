@@ -785,6 +785,125 @@ function zillowInfo() {
             console.log("After Zillow. googleID=" + currentProperty.googlePlaceID);
             console.log(propertyArry[currentProperty.googlePlaceID]);
         });
+    }).then(function() {
+        var queryURL = "http://api.greatschools.org/schools/nearby?key=vkyg4cq5fpsynnc7fmellgxx&address=" + propertyAddress + "&city=" + propertyCity + "&state=" + propertyState + "&zip=" + propertyZip + "&schoolType=public&levelCode=elementary-schools&radius=10&limit=2";
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).done(function(response) {
+            console.log("getGreatSchoolInfo ");
+            console.log(response);
+            var jsonresp5 = xmlToJson(response);
+            console.log(jsonresp5); // Whole Json object
+            propertyInfo.publicElementary1 = jsonresp5.schools.school[0].name["#text"];
+            console.log("Public Elementary 1 Name: " + propertyInfo.publicElementary1);
+            propertyInfo.publicElementary1GradeRange = jsonresp5.schools.school["0"].gradeRange["#text"];
+            console.log("Public Elementary 1 Grade Range: " + propertyInfo.publicElementary1GradeRange);
+            propertyInfo.publicElementary1Rating = jsonresp5.schools.school["0"].gsRating["#text"];
+            console.log("Public Elementary 1 Rating: " + propertyInfo.publicElementary1Rating);
+            propertyInfo.publicElementary2 = jsonresp5.schools.school[1].name["#text"];
+            console.log("Public Elementary 2 Name: " + propertyInfo.publicElementary2);
+            propertyInfo.publicElementary2GradeRange = jsonresp5.schools.school["1"].gradeRange["#text"];
+            console.log("Public Elementary 2 Grade Range: " + propertyInfo.publicElementary2GradeRange);
+            propertyInfo.publicElementary2Rating = jsonresp5.schools.school["1"].gsRating["#text"];
+            console.log("Public Elementary 2 Rating: " + propertyInfo.publicElementary2Rating);
+        });
+    }).then(function() {
+        var queryURL = "http://api.greatschools.org/schools/nearby?key=vkyg4cq5fpsynnc7fmellgxx&address=" + propertyAddress + "&city=" + propertyCity + "&state=" + propertyState + "&zip=" + propertyZip + "&schoolType=public&levelCode=middle-schools&radius=10&limit=2";
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).done(function(response) {
+            console.log("getGreatSchoolInfo ");
+            console.log(response);
+            var jsonresp6 = xmlToJson(response);
+            console.log(jsonresp6); // Whole Json object
+            propertyInfo.publicmiddle1 = jsonresp6.schools.school[0].name["#text"];
+            console.log("Public middle 1 Name: " + propertyInfo.publicmiddle1);
+            propertyInfo.publicmiddle1GradeRange = jsonresp6.schools.school["0"].gradeRange["#text"];
+            console.log("Public middle 1 Grade Range: " + propertyInfo.publicmiddle1GradeRange);
+            propertyInfo.publicmiddle1Rating = jsonresp6.schools.school["0"].gsRating["#text"];
+            console.log("Public middle 1 Rating: " + propertyInfo.publicmiddle1Rating);
+            propertyInfo.publicmiddle2 = jsonresp6.schools.school[1].name["#text"];
+            console.log("Public middle 2 Name: " + propertyInfo.publicmiddle2);
+            propertyInfo.publicmiddle2GradeRange = jsonresp6.schools.school["1"].gradeRange["#text"];
+            console.log("Public middle 2 Grade Range: " + propertyInfo.publicmiddle2GradeRange);
+            propertyInfo.publicmiddle2Rating = jsonresp6.schools.school["1"].gsRating["#text"];
+            console.log("Public middle 2 Rating: " + propertyInfo.publicmiddle2Rating);
+        });
+    }).then(function() {
+        var queryURL = "http://api.greatschools.org/schools/nearby?key=vkyg4cq5fpsynnc7fmellgxx&address=" + propertyAddress + "&city=" + propertyCity + "&state=" + propertyState + "&zip=" + propertyZip + "&schoolType=public&levelCode=high-schools&radius=10&limit=2";
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).done(function(response) {
+            console.log("getGreatSchoolInfo ");
+            console.log(response);
+            var jsonresp7 = xmlToJson(response);
+            console.log(jsonresp7); // Whole Json object
+            propertyInfo.publichigh1 = jsonresp7.schools.school[0].name["#text"];
+            console.log("Public high 1 Name: " + propertyInfo.publichigh1);
+            propertyInfo.publichigh1GradeRange = jsonresp7.schools.school["0"].gradeRange["#text"];
+            console.log("Public high 1 Grade Range: " + propertyInfo.publichigh1GradeRange);
+            propertyInfo.publichigh1Rating = jsonresp7.schools.school["0"].gsRating["#text"];
+            console.log("Public high 1 Rating: " + propertyInfo.publichigh1Rating);
+            propertyInfo.publichigh2 = jsonresp7.schools.school[1].name["#text"];
+            console.log("Public high 2 Name: " + propertyInfo.publichigh2);
+            propertyInfo.publichigh2GradeRange = jsonresp7.schools.school["1"].gradeRange["#text"];
+            console.log("Public high 2 Grade Range: " + propertyInfo.publichigh2GradeRange);
+            propertyInfo.publichigh2Rating = jsonresp7.schools.school["1"].gsRating["#text"];
+            console.log("Public high 2 Rating: " + propertyInfo.publichigh2Rating);
+        });
+    }).then(function() {
+        var queryURL = "http://api.greatschools.org/schools/nearby?key=vkyg4cq5fpsynnc7fmellgxx&address=" + propertyAddress + "&city=" + propertyCity + "&state=" + propertyState + "&zip=" + propertyZip + "&schoolType=private&levelCode=middle-schools&radius=10&limit=2";
+        // private schools
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).done(function(response) {
+            console.log("------------- Private Elementary-Middle ----------------");
+            console.log(response);
+            var jsonresp8 = xmlToJson(response);
+            console.log(jsonresp8); // Whole Json object
+            propertyInfo.privateElementaryMiddle1 = jsonresp8.schools.school[0].name["#text"];
+            console.log("Private Elementary-Middle 1 Name: " + propertyInfo.privateElementaryMiddle1);
+            propertyInfo.privateElementaryMiddle1GradeRange = jsonresp8.schools.school["0"].gradeRange["#text"];
+            console.log("Private Elementary-Middle 1 Grade Range: " + propertyInfo.privateElementaryMiddle1GradeRange);
+            propertyInfo.privateElementaryMiddle1ParentRating = jsonresp8.schools.school["0"].parentRating["#text"];
+            console.log("Private Elementary-Middle 1 Parent Rating: " + propertyInfo.privateElementaryMiddle1ParentRating);
+            propertyInfo.privateElementaryMiddle2 = jsonresp8.schools.school[1].name["#text"];
+            console.log("Private Elementary-Middle 2 Name: " + propertyInfo.privateElementaryMiddle2);
+            propertyInfo.privateElementaryMiddle2GradeRange = jsonresp8.schools.school["1"].gradeRange["#text"];
+            console.log("Private Elementary-Middle 2 Grade Range: " + propertyInfo.privateElementaryMiddle2GradeRange);
+            propertyInfo.privateElementaryMiddle2ParentRating = jsonresp8.schools.school["1"].parentRating["#text"];
+            console.log("Private Elementary-Middle 2 Parent Rating: " + propertyInfo.privateElementaryMiddle2ParentRating);
+        });
+    }).then(function() {
+        var queryURL = "http://api.greatschools.org/schools/nearby?key=vkyg4cq5fpsynnc7fmellgxx&address=" + propertyAddress + "&city=" + propertyCity + "&state=" + propertyState + "&zip=" + propertyZip + "&schoolType=private&levelCode=high-schools&radius=20&limit=2";
+        // private schools
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).done(function(response) {
+            console.log("------------- Private High ----------------");
+            console.log(response);
+            var jsonresp9 = xmlToJson(response);
+            console.log(jsonresp9); // Whole Json object
+            propertyInfo.privateHighSchool1 = jsonresp9.schools.school[0].name["#text"];
+            console.log("Private High 1 Name: " + propertyInfo.privateHighSchool1);
+            propertyInfo.privateHighSchool1GradeRange = jsonresp9.schools.school["0"].gradeRange["#text"];
+            console.log("Private Hihg 1 Grade Range: " + propertyInfo.privateHighSchool1GradeRange);
+            propertyInfo.privateHighSchool1ParentRating = jsonresp9.schools.school["0"].parentRating["#text"];
+            console.log("Private High 1 Parent Rating: " + propertyInfo.privateHighSchool1ParentRating);
+            propertyInfo.privateHighSchool2 = jsonresp9.schools.school[1].name["#text"];
+            console.log("Private High 2 Name: " + propertyInfo.privateHighSchool2);
+            propertyInfo.privateHighSchool2GradeRange = jsonresp9.schools.school["1"].gradeRange["#text"];
+            console.log("Private High 2 Grade Range: " + propertyInfo.privateHighSchool2GradeRange);
+            propertyInfo.privateHighSchool2ParentRating = jsonresp9.schools.school["1"].parentRating["#text"];
+            console.log("Private High 2 Parent Rating: " + propertyInfo.privateHighSchool2ParentRating);
+        });
+    }).then(function() {
+        //for Mortgage API
     });
 };
 
