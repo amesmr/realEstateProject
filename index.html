@@ -23,12 +23,26 @@
 <body>
     <nav class="light-blue lighten-1" role="navigation">
         <div class="nav-wrapper container">
-            <a id="logo-container" href="#" class="brand-logo"></a>
-            <img src="images/house.jpg" class="img-circle" alt="logo" width="70px" height="65px">
+            <a id="logo-container" href="#" class="brand-logo">
+                <img src="images/house.jpg" class="img-circle" alt="logo" width="70px" height="65px">
+            </a>
+            <ul class="right hide-on-med-and-down">
+                <li>
+                    <a class="btn waves-effect waves-light orange" href=" https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en"><i class="material-icons left">assignment_ind</i>
+		                To Enable Functionality of This Site, Please Install This Addon for Chrome
+		            </a>
+                </li>
+            </ul>
         </div>
     </nav>
     <div class="section no-pad-bot " id="index-banner ">
         <div class="container ">
+            <div style="display: none;">
+                <a id="trigger" href="#popup">&nbsp;</a>
+                <div id="popup" style="width: 250px; height: 400px;">
+                    <p>This would be an aweber form.</p>
+                </div>
+            </div>
             <br>
             <br>
             <h1 class="header center orange-text ">Should We Stay or Should We Go??</h1>
@@ -122,6 +136,7 @@
                                 <img src="images/gmaps.jpg " width="50px" height="40px" margin-right="100px">
                                 <img src="images/gs.png " width="50px" height="40px" margin-right="15px">
                                 <img src="images/gis.png " width="50px" height="40px" margin-right="15px">
+
                                 <img src="images/zillow.png " width="50px" height="40px" margin-right="5px">
                                 </div>
                             </div>
@@ -152,7 +167,8 @@
                             <th>Neighborhood</th>
                             <th>Square Feet</th>
                             <th>Year Built</th>
-                            <th>Stories</th>
+                            <th>Lot Size (sq ft)</th>
+                            <!-- <th>Stories</th> -->
                             <th>Bedrooms</th>
                             <th>Baths</th>
                             <th>Lot Size</th>
