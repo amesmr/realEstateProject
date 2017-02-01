@@ -7,9 +7,11 @@
  *
  * Made By MaterializeCSS.com
  */
+
 .container {
-    width:100%;
+    width: 100%;
 }
+
 .icon-block {
     padding: 0 15px;
 }
@@ -41,13 +43,15 @@ h3 {
     text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
     text-align: center;
 }
-h4 { 
-text-align: center; }
+
+h4 {
+    text-align: center;
+}
+
 img {
     border: 1px solid #8a4419;
     border-style: inset;
 }
-
 
 .details {
     font-size: medium;
@@ -62,24 +66,29 @@ img {
     border: 1px solid #8a4419;
     border-style: inset;
     margin-top: 25px;
-    margin-left:20px;
+    margin-left: 20px;
 }
+
 #street-view {
     margin-right: 25px;
 }
+
 table {
-   border: 1px solid blue;
-   background-color: orange;
+    border: 1px solid blue;
+    background-color: orange;
 }
+
 th {
     font-weight: bold;
 }
-.results, #decision {
+
+.results,
+#decision {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: center;
     color: blue;
-  }
+}
 
 #copyright {
     text-align: center;

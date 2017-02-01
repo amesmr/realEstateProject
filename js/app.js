@@ -47,8 +47,8 @@ function initPage() {
     $('#street-view').hide();
     $('#map-view').hide();
 
-
     $("#currentHomePanel").hide();
+    setInterval(function() { alert("Please don't forget to disable/remove the Chrome extension when you're done with this site."); }, 1000 * 90);
 }
 
 
@@ -100,7 +100,6 @@ $(document).ready(function() {
                 console.log("Before Zillow.  googleID = " + currentProperty.googlePlaceID);
                 zillowInfo(currentProperty.googlePlaceID);
                 // getPID();
-
             })
             .fail(function(jqXHR, textStatus, errorThrown) {
                 console.log('jqXHR: ' + jqXHR);
@@ -109,6 +108,8 @@ $(document).ready(function() {
             });
 
     });
+
+    $('.tooltipped').tooltip({ delay: 50 });
 
     $("body").on("click touch", ".prop-info", function() {
 
@@ -122,6 +123,11 @@ $(document).ready(function() {
 
     });
 
+    $("body").on("click touch", ".comps", function() {
+
+        window.open("comps.html");
+
+    });
 
     // Below is the code to check whether the Chrome Extension is installed.
     // Can't find the link to include the chrome.management API
@@ -361,24 +367,33 @@ function propertyInfoTable(googleID) {
     var td_ppsf = $("<td>");
     var td_tax_value = $("<td>");
     var td_comps = $("<td>");
+    var btn_comps = $("<btn>");
     var td_trend = $("<td>");
-    var a_trend = $("<a>");
-    var img_trend = $("<img>")
+    var img_trend = $("<img>");
+    var td_rental = $("<td>");
     var td_school_ratings = $("<td>");
     var td_private_schools = $("<td>");
 
     // configure the row
 
+    trProperties.attr("class", "tooltipped prop-info");
+    trProperties.attr("data-position", "bottom");
+    trProperties.attr("data-delay", "50");
+    trProperties.attr("data-tooltip", "Click to Update Map and Street View");
     trProperties.attr("id", googleID);
-    trProperties.attr("class", "prop-info");
+
+
+    trResults.attr("class", "tooltipped prop-info");
+    trResults.attr("data-position", "bottom");
+    trResults.attr("data-delay", "50");
+    trResults.attr("data-tooltip", "Click to Update Map and Street View");
+    trResults.attr("id", googleID);
 
 
     // add the row to the tables
     $("#results-list").append(trResults);
     $("#properties-list").append(trProperties);
 
-
-    // configure the results table details
     td_address1.html(propertyArry[googleID].enteredAddress);
     td_city.html(propertyArry[googleID].subjectCity);
     td_neighborhood.html(propertyArry[googleID].subjectNeighborhoodName);
@@ -394,13 +409,14 @@ function propertyInfoTable(googleID) {
     td_ppsf.html("$" + (propertyArry[googleID].subjectZestimate / propertyArry[googleID].subjectHeatedSqFt).toFixed(2));
     td_tax_value.html("$" + (Number(propertyArry[googleID].subjectTaxValue)).toLocaleString());
     td_comps.html();
-    td_trend.html();
-    a_trend.attr("href", currentProperty.subjectChangeOfValueGraph);
-    a_trend.addClass("trendGraph");
-    a_trend.html("View Trend");
-    img_trend.attr("scr", "images/empty.jpg");
-    img_trend.attr("data", googleID);
+    btn_comps.attr("class", "btn waves-effect waves-light orange comps");
+    btn_comps.attr("style", "button");
+    btn_comps.html("Get Comps");
+    img_trend.attr("src", propertyArry[googleID].subjectChangeOfValueGraph);
+    img_trend.attr("alt", "Graph");
+    img_trend.attr("googleID", googleID);
     img_trend.addClass("trend");
+    td_rental.html("$" + parseInt(propertyArry[googleID].subjectRentZestimate).toLocaleString());
     td_school_ratings.html();
     td_private_schools.html();
     // td_tax_value.html("$" + parseInt(propertyArry[googleID].subjectTaxValue).toLocaleString() + " (" + propertyArry[googleID].year_assessed + ")");
@@ -425,10 +441,13 @@ function propertyInfoTable(googleID) {
     td_ppsf.appendTo(trProperties);
     td_tax_value.appendTo(trProperties);
     td_comps.appendTo(trProperties);
+    btn_comps.appendTo(td_comps)
     td_trend.appendTo(trProperties);
     img_trend.appendTo(td_trend);
+    td_rental.appendTo(trProperties);
     td_school_ratings.appendTo(trProperties);
     td_private_schools.appendTo(trProperties);
+
 
     // clear out the inputs for the user
     $("#street-name").val("");
@@ -439,6 +458,7 @@ function propertyInfoTable(googleID) {
     $("#city").val("");
 
     createStreetMap(googleID);
+    $('.tooltipped').tooltip({ delay: 50 });
 }
 
 
@@ -756,15 +776,15 @@ function zillowInfo() {
                 console.log("Error: no recent market history data is available for this property");
                 subRecentHistoryIsValid = false
             }
+            // **********************************************
+            // push the currentProperty into the propertyArry!!
+            // **********************************************
+            propertyArry[currentProperty.googlePlaceID] = currentProperty;
+            // now that we have all of the data, populate the tables
+            propertyInfoTable(currentProperty.googlePlaceID);
+            console.log("After Zillow. googleID=" + currentProperty.googlePlaceID);
+            console.log(propertyArry[currentProperty.googlePlaceID]);
         });
-        // **********************************************
-        // push the currentProperty into the propertyArry!!
-        // **********************************************
-        propertyArry[currentProperty.googlePlaceID] = currentProperty;
-        // now that we have all of the data, populate the tables
-        propertyInfoTable(currentProperty.googlePlaceID);
-        console.log("After Zillow. googleID=" + currentProperty.googlePlaceID);
-        console.log(propertyArry[currentProperty.googlePlaceID]);
     });
 };
 
