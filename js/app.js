@@ -48,7 +48,7 @@ function initPage() {
     $('#map-view').hide();
 
     $("#currentHomePanel").hide();
-    setInterval(function() { alert("Please don't forget to disable/remove the Chrome extension when you're done with this site."); }, 1000 * 90);
+    setInterval(function() { alert("Please don't forget to disable/remove the Chrome extension when you're done with this site."); }, 1000 * 60 * 4);
 }
 
 
@@ -124,6 +124,12 @@ $(document).ready(function() {
     });
 
     $("body").on("click touch", ".comps", function() {
+
+        window.open("comps.html");
+
+    });
+
+    $("body").on("click touch", ".schools", function() {
 
         window.open("comps.html");
 
@@ -372,6 +378,7 @@ function propertyInfoTable(googleID) {
     var img_trend = $("<img>");
     var td_rental = $("<td>");
     var td_school_ratings = $("<td>");
+    var btn_schools = $("<btn>");
     var td_private_schools = $("<td>");
 
     // configure the row
@@ -409,15 +416,18 @@ function propertyInfoTable(googleID) {
     td_ppsf.html("$" + (propertyArry[googleID].subjectZestimate / propertyArry[googleID].subjectHeatedSqFt).toFixed(2));
     td_tax_value.html("$" + (Number(propertyArry[googleID].subjectTaxValue)).toLocaleString());
     td_comps.html();
-    btn_comps.attr("class", "btn waves-effect waves-light orange comps");
+    btn_comps.attr("class", "btn waves-effect waves-light amber comps");
     btn_comps.attr("style", "button");
-    btn_comps.html("Get Comps");
+    btn_comps.html("Comps");
     img_trend.attr("src", propertyArry[googleID].subjectChangeOfValueGraph);
     img_trend.attr("alt", "Graph");
     img_trend.attr("googleID", googleID);
     img_trend.addClass("trend");
     td_rental.html("$" + parseInt(propertyArry[googleID].subjectRentZestimate).toLocaleString());
     td_school_ratings.html();
+    btn_schools.attr("class", "btn waves-effect waves-light amber schools");
+    btn_schools.attr("style", "button");
+    btn_schools.html("Schools");
     td_private_schools.html();
     // td_tax_value.html("$" + parseInt(propertyArry[googleID].subjectTaxValue).toLocaleString() + " (" + propertyArry[googleID].year_assessed + ")");
     // td_stories.html(propertyArry[googleID].stories);;
@@ -441,11 +451,12 @@ function propertyInfoTable(googleID) {
     td_ppsf.appendTo(trProperties);
     td_tax_value.appendTo(trProperties);
     td_comps.appendTo(trProperties);
-    btn_comps.appendTo(td_comps)
+    btn_comps.appendTo(td_comps);
     td_trend.appendTo(trProperties);
     img_trend.appendTo(td_trend);
     td_rental.appendTo(trProperties);
     td_school_ratings.appendTo(trProperties);
+    btn_schools.appendTo(td_school_ratings);
     td_private_schools.appendTo(trProperties);
 
 
