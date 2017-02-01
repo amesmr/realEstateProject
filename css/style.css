@@ -43,12 +43,14 @@ h3 {
 }
 h4 { 
 text-align: center; }
-img {
-    border: 1px solid #8a4419;
-    border-style: inset;
+ /*img {
+    border: 1px solid white;
+    border-style: groove;
 }
+*/
 
 
+}
 .details {
     font-size: medium;
     color: blue;
