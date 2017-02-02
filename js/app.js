@@ -165,7 +165,7 @@ $(document).ready(function() {
 // function getPID() {
 //     var formattedAddress = currentProperty.enteredAddress.toLowerCase();
 
-//     var queryURL = "http://maps.co.mecklenburg.nc.us/api/search/v1/" + formattedAddress + "?tables=address&limit=1"
+//     var queryURL = "https://maps.co.mecklenburg.nc.us/api/search/v1/" + formattedAddress + "?tables=address&limit=1"
 //     queryURL = encodeURI(queryURL);
 //     // console.log("maps.co.mecklenburg URL: " + queryURL);
 
@@ -189,7 +189,7 @@ $(document).ready(function() {
 // }
 
 // function getPropertyUse() {
-//     var queryURL = "http://maps.co.mecklenburg.nc.us/rest/v3/ws_cama_landuse.php?pid=" + currentProperty.PID;
+//     var queryURL = "https://maps.co.mecklenburg.nc.us/rest/v3/ws_cama_landuse.php?pid=" + currentProperty.PID;
 
 //     $.ajax({
 //             url: queryURL,
@@ -227,7 +227,7 @@ $(document).ready(function() {
 // }
 
 // function getBuildingInfo() {
-//     var queryURL = "http://maps.co.mecklenburg.nc.us/rest/v3/ws_cama_building.php?pid=" + currentProperty.PID;
+//     var queryURL = "https://maps.co.mecklenburg.nc.us/rest/v3/ws_cama_building.php?pid=" + currentProperty.PID;
 
 //     $.ajax({
 //             url: queryURL,
@@ -278,7 +278,7 @@ $(document).ready(function() {
 // }
 
 // function getAppraisalInfo() {
-//     var queryURL = "http://maps.co.mecklenburg.nc.us/rest/v3/ws_cama_appraisal.php?pid=" + currentProperty.PID;
+//     var queryURL = "https://maps.co.mecklenburg.nc.us/rest/v3/ws_cama_appraisal.php?pid=" + currentProperty.PID;
 
 //     $.ajax({
 //             url: queryURL,
@@ -310,7 +310,7 @@ $(document).ready(function() {
 // }
 
 // function getGreatSchoolInfo() {
-//     var queryURL = "http://api.greatschools.org/schools/nearby?key=[vkyg4cq5fpsynnc7fmellgxx]&state=NC&lat=" + lat + "&lon=" + lng;
+//     var queryURL = "https://api.greatschools.org/schools/nearby?key=[vkyg4cq5fpsynnc7fmellgxx]&state=NC&lat=" + lat + "&lon=" + lng;
 
 //     $.ajax({
 //             url: queryURL,
@@ -789,7 +789,7 @@ function zillowInfo() {
             }
         });
     }).then(function() {
-        var queryURL = "http://api.greatschools.org/schools/nearby?key=vkyg4cq5fpsynnc7fmellgxx&address=" + currentProperty.enteredAddress + "&city=" + currentProperty.city + "&state=NC&zip=" + currentProperty.zip + "&schoolType=public&levelCode=elementary-schools&radius=10&limit=2";
+        var queryURL = "https://api.greatschools.org/schools/nearby?key=vkyg4cq5fpsynnc7fmellgxx&address=" + currentProperty.enteredAddress + "&city=" + currentProperty.city + "&state=NC&zip=" + currentProperty.zip + "&schoolType=public&levelCode=elementary-schools&radius=10&limit=2";
 
         queryURL = queryURL.replace(/ /g, "+");
         $.ajax({
@@ -814,7 +814,7 @@ function zillowInfo() {
             // console.log("Public Elementary 2 Rating: " + currentProperty.publicElementary2Rating);
         });
     }).then(function() {
-        var queryURL = "http://api.greatschools.org/schools/nearby?key=vkyg4cq5fpsynnc7fmellgxx&address=" + currentProperty.enteredAddress + "&city=" + currentProperty.city + "&state=NC&zip=" + currentProperty.zip + "&schoolType=public&levelCode=middle-schools&radius=10&limit=2";
+        var queryURL = "https://api.greatschools.org/schools/nearby?key=vkyg4cq5fpsynnc7fmellgxx&address=" + currentProperty.enteredAddress + "&city=" + currentProperty.city + "&state=NC&zip=" + currentProperty.zip + "&schoolType=public&levelCode=middle-schools&radius=10&limit=2";
 
         queryURL = queryURL.replace(/ /g, "+");
         $.ajax({
@@ -839,7 +839,7 @@ function zillowInfo() {
             // console.log("Public middle 2 Rating: " + currentProperty.publicmiddle2Rating);
         });
     }).then(function() {
-        var queryURL = "http://api.greatschools.org/schools/nearby?key=vkyg4cq5fpsynnc7fmellgxx&address=" + currentProperty.enteredAddress + "&city=" + currentProperty.city  + "&state=NC&zip=" + currentProperty.zip + "&schoolType=public&levelCode=high-schools&radius=10&limit=2";
+        var queryURL = "https://api.greatschools.org/schools/nearby?key=vkyg4cq5fpsynnc7fmellgxx&address=" + currentProperty.enteredAddress + "&city=" + currentProperty.city  + "&state=NC&zip=" + currentProperty.zip + "&schoolType=public&levelCode=high-schools&radius=10&limit=2";
         queryURL = queryURL.replace(/ /g, "+");
         $.ajax({
             url: queryURL,
@@ -863,7 +863,7 @@ function zillowInfo() {
             // console.log("Public high 2 Rating: " + currentProperty.publichigh2Rating);
         });
     }).then(function() {
-        var queryURL = "http://api.greatschools.org/schools/nearby?key=vkyg4cq5fpsynnc7fmellgxx&address=" + currentProperty.enteredAddress + "&city=" + currentProperty.city + "&state=NC&zip=" + currentProperty.zip + "&schoolType=private&levelCode=middle-schools&radius=10&limit=2";
+        var queryURL = "https://api.greatschools.org/schools/nearby?key=vkyg4cq5fpsynnc7fmellgxx&address=" + currentProperty.enteredAddress + "&city=" + currentProperty.city + "&state=NC&zip=" + currentProperty.zip + "&schoolType=private&levelCode=middle-schools&radius=10&limit=2";
         queryURL = queryURL.replace(/ /g, "+");
         // private schools
         $.ajax({
@@ -888,7 +888,7 @@ function zillowInfo() {
             //     console.log("Private Elementary-Middle 2 Parent Rating: " + currentProperty.privateElementaryMiddle2ParentRating);
             // });
         }).then(function() {
-            var queryURL = "http://api.greatschools.org/schools/nearby?key=vkyg4cq5fpsynnc7fmellgxx&address=" + currentProperty.enteredAddress + "&city=" + currentProperty.city + "&state=NC&zip=" + currentProperty.zip + "&schoolType=private&levelCode=high-schools&radius=20&limit=2";
+            var queryURL = "https://api.greatschools.org/schools/nearby?key=vkyg4cq5fpsynnc7fmellgxx&address=" + currentProperty.enteredAddress + "&city=" + currentProperty.city + "&state=NC&zip=" + currentProperty.zip + "&schoolType=private&levelCode=high-schools&radius=20&limit=2";
         queryURL = queryURL.replace(/ /g, "+");
             // private schools
             $.ajax({
