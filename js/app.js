@@ -131,7 +131,7 @@ $(document).ready(function() {
 
     $("body").on("click touch", ".schools", function() {
 
-        window.open("comps.html");
+        window.open("schools.html");
 
     });
 
